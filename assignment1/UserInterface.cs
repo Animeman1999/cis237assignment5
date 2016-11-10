@@ -1,6 +1,7 @@
-﻿//Author: David Barnes
-//CIS 237
-//Assignment 1
+﻿/* Jeffrey Martin
+   CIS237 Advanced C3
+   9-20-20196
+*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,198 +11,228 @@ using System.Threading.Tasks;
 namespace assignment1
 {
     class UserInterface
-    {
-        const int maxMenuChoice = 5;
-        //---------------------------------------------------
-        //Public Methods
-        //---------------------------------------------------
+    {// Methods to handle all input and output for the program
 
-        //Display Welcome Greeting
-        public void DisplayWelcomeGreeting()
+        /// <summary>
+        /// Handles input and output of the Start Menu
+        /// </summary>
+        /// <returns>int</returns>
+        public int GetUserStartMenu()
         {
-            Console.WriteLine("Welcome to the wine program");
-        }
-
-        //Display Menu And Get Response
-        public int DisplayMenuAndGetResponse()
-        {
-            //declare variable to hold the selection
-            string selection;
-
-            //Display menu, and prompt
-            this.displayMenu();
-            this.displayPrompt();
-
-            //Get the selection they enter
-            selection = this.getSelection();
-
-            //While the response is not valid
-            while (!this.verifySelectionIsValid(selection))
+            this.LoadMenu();
+            ConsoleKeyInfo inputChar = Console.ReadKey();
+            string inputString = inputChar.KeyChar.ToString();
+            Console.WriteLine();
+            while (inputString != "1" && inputString != "2")
             {
-                //display error message
-                this.displayErrorMessage();
-
-                //display the prompt again
-                this.displayPrompt();
-
-                //get the selection again
-                selection = this.getSelection();
+                Console.WriteLine(WriteInvalidEntry());
+                this.LoadMenu();
+                inputChar = Console.ReadKey();
+                inputString = inputChar.KeyChar.ToString();
+                Console.WriteLine();
             }
-            //Return the selection casted to an integer
-            return Int32.Parse(selection);
+            return Int16.Parse(inputString);
         }
-
-        //Get the search query from the user
-        public string GetSearchQuery()
+        /// <summary>
+        /// Handles input and output of the Main Menu
+        /// </summary>
+        /// <returns></returns>
+        public int GetUserInputMainMenu()
         {
+            this.PrintMainMenu();
+            ConsoleKeyInfo inputChar = Console.ReadKey();
+            string inputString = inputChar.KeyChar.ToString();
             Console.WriteLine();
-            Console.WriteLine("What would you like to search for?");
-            Console.Write("> ");
-            return Console.ReadLine();
-        }
-
-        //Get New Item Information From The User.
-        public string[] GetNewItemInformation()
-        {
-            Console.WriteLine();
-            Console.WriteLine("What is the new items Id?");
-            Console.Write("> ");
-            string id = Console.ReadLine();
-            Console.WriteLine("What is the new items Description?");
-            Console.Write("> ");
-            string description = Console.ReadLine();
-            Console.WriteLine("What is the new items Pack?");
-            Console.Write("> ");
-            string pack = Console.ReadLine();
-
-            return new string[] { id, description, pack };
-        }
-
-        //Display Import Success
-        public void DisplayImportSuccess()
-        {
-            Console.WriteLine();
-            Console.WriteLine("Wine List Has Been Imported Successfully");
-        }
-
-        //Display Import Error
-        public void DisplayImportError()
-        {
-            Console.WriteLine();
-            Console.WriteLine("There was an error importing the CSV");
-        }
-
-        //Display All Items
-        public void DisplayAllItems(string[] allItemsOutput)
-        {
-            Console.WriteLine();
-            foreach (string itemOutput in allItemsOutput)
+            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4")
             {
-                Console.WriteLine(itemOutput);
+                Console.WriteLine(WriteInvalidEntry());
+                this.PrintMainMenu();
+                inputChar = Console.ReadKey();
+                inputString = inputChar.KeyChar.ToString();
+                Console.WriteLine();
+            }
+            return Int16.Parse(inputString);
+        }
+
+        /// <summary>
+        /// Handles the input and output of the Search Menu
+        /// </summary>
+        /// <returns>int</returns>
+        public int GetUserInputSearchMenu()
+        {
+            this.PrintSearchMenu();
+
+            ConsoleKeyInfo inputChar = Console.ReadKey();
+            string inputString = inputChar.KeyChar.ToString();
+            Console.WriteLine();
+            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4")
+            {
+                Console.WriteLine(WriteInvalidEntry());
+                this.PrintSearchMenu();
+                inputChar = Console.ReadKey();
+                inputString = inputChar.KeyChar.ToString();
+                Console.WriteLine();
+            }
+            return Int16.Parse(inputString);
+        }
+
+        /// <summary>
+        /// Generic invalid entry error message
+        /// </summary>
+        /// <returns>string</returns>
+        private string WriteInvalidEntry()
+        {
+            string invalidEntry;
+            invalidEntry = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + Environment.NewLine +
+                            "Not a valid entry, please make another choice" + Environment.NewLine +
+                            "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + Environment.NewLine;
+            return invalidEntry;
+        }
+
+        /// <summary>
+        /// Specific invalid entry error message
+        /// </summary>
+        /// <param name="propertyName">string</param>
+        /// <returns>string</returns>
+        private string WriteInvalidSpecificEntry(string propertyName)
+        {
+            string errorMessage = "XXXXXXXXXXXXXXXXXXXXXXXXXX" + Environment.NewLine +
+                                    $"No {propertyName} entered" + Environment.NewLine +
+                                    "XXXXXXXXXXXXXXXXXXXXXXXXXX";
+            return errorMessage;
+        }
+
+        /// <summary>
+        /// Searches the property for a value input by the user and outputs if found
+        /// </summary>
+        /// <param name="WineCollection">WineItem[]</param>
+        /// <param name="propertyName">string</param>
+        public void SearchBy(WineItemCollection WineCollection, string propertyName)
+        {
+            Console.Write($"Enter {propertyName}: ");
+            string input = Console.ReadLine();
+            if (input == "")
+            {
+                Console.WriteLine(WriteInvalidSpecificEntry(propertyName));
+            }
+            else
+            {
+                Console.WriteLine(WineCollection.SearchBy(input, propertyName));
             }
         }
 
-        //Display All Items Error
-        public void DisplayAllItemsError()
+        /// <summary>
+        /// Input sequence to create a new WineItem that calls a method to add it to the WineItem array.
+        /// </summary>
+        /// <param name="WineCollection">WineItem[]</param>
+        public void AddWine(WineItemCollection WineCollection)
         {
-            Console.WriteLine();
-            Console.WriteLine("There are no items in the list to print");
-        }
-
-        //Display Item Found Success
-        public void DisplayItemFound(string itemInformation)
-        {
-            Console.WriteLine();
-            Console.WriteLine("Item Found!");
-            Console.WriteLine(itemInformation);
-        }
-
-        //Display Item Found Error
-        public void DisplayItemFoundError()
-        {
-            Console.WriteLine();
-            Console.WriteLine("A Match was not found");
-        }
-
-        //Display Add Wine Item Success
-        public void DisplayAddWineItemSuccess()
-        {
-            Console.WriteLine();
-            Console.WriteLine("The Item was successfully added");
-        }
-
-        //Display Item Already Exists Error
-        public void DisplayItemAlreadyExistsError()
-        {
-            Console.WriteLine();
-            Console.WriteLine("An Item With That Id Already Exists");
-        }
-
-
-        //---------------------------------------------------
-        //Private Methods
-        //---------------------------------------------------
-
-        //Display the Menu
-        private void displayMenu()
-        {
-            Console.WriteLine();
-            Console.WriteLine("What would you like to do?");
-            Console.WriteLine();
-            Console.WriteLine("1. Load Wine List From CSV");
-            Console.WriteLine("2. Print The Entire List Of Items");
-            Console.WriteLine("3. Search For An Item");
-            Console.WriteLine("4. Add New Item To The List");
-            Console.WriteLine("5. Exit Program");
-        }
-
-        //Display the Prompt
-        private void displayPrompt()
-        {
-            Console.WriteLine();
-            Console.Write("Enter Your Choice: ");
-        }
-
-        //Display the Error Message
-        private void displayErrorMessage()
-        {
-            Console.WriteLine();
-            Console.WriteLine("That is not a valid option. Please make a valid choice");
-        }
-
-        //Get the selection from the user
-        private string getSelection()
-        {
-            return Console.ReadLine();
-        }
-
-        //Verify that a selection from the main menu is valid
-        private bool verifySelectionIsValid(string selection)
-        {
-            //Declare a returnValue and set it to false
-            bool returnValue = false;
-
-            try
+            Console.Write("Enter Wine ID: ");
+            string idInput = Console.ReadLine();
+            if (idInput == "")
             {
-                //Parse the selection into a choice variable
-                int choice = Int32.Parse(selection);
+                Console.WriteLine(WriteInvalidSpecificEntry("Wine Id"));
 
-                //If the choice is between 0 and the maxMenuChoice
-                if (choice > 0 && choice <= maxMenuChoice)
+            }
+            else
+            {
+                Console.Write("Enter Wine Description: ");
+                string descriptionInput = Console.ReadLine();
+                while (descriptionInput == "")
                 {
-                    //set the return value to true
-                    returnValue = true;
+                    Console.WriteLine(WriteInvalidSpecificEntry("Wine Description"));
+                    Console.Write("Enter Wine Description: ");
+                    descriptionInput = Console.ReadLine();
                 }
-            }
-            //If the selection is not a valid number, this exception will be thrown
-            catch (Exception e)
-            {
-                //set return value to false even though it should already be false
-                returnValue = false;
-            }
 
-            //Return the reutrnValue
-            return returnValue;
+
+                Console.Write("Enter Wine Pack: ");
+                string packInput = Console.ReadLine();
+                while (packInput == "")
+                {
+                    Console.WriteLine(WriteInvalidSpecificEntry("Wine Pack"));
+                    Console.Write("Enter Wine Pack: ");
+                    packInput = Console.ReadLine();
+                }
+
+                WineItem wineItemToAdd = new WineItem();
+                wineItemToAdd.ID = idInput;
+                wineItemToAdd.Description = descriptionInput;
+                wineItemToAdd.Pack = packInput;
+
+                WineCollection.AddNewItem(idInput, descriptionInput, packInput);
+                Console.WriteLine("**************************************************************************");
+                Console.WriteLine(wineItemToAdd + " has been added to the file");
+                Console.WriteLine("**************************************************************************");
+                Console.WriteLine();
+
+
+            }
+        }
+
+        /// <summary>
+        /// Method to ouput any string to the console
+        /// </summary>
+        /// <param name="printOutput">string</param>
+        public void PrintOutput(string[] printOutput)
+        {
+
+            Console.BufferHeight = Int16.MaxValue - 1;
+            for (int index = 0; index < printOutput.Length; index++)
+            {
+                Console.Write(Environment.NewLine + printOutput[index]);
+            }
+            Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Outputs the Load Menu to the console
+        /// </summary>
+        private void LoadMenu()
+        {
+            Console.WriteLine("Welcome to the wine list program.");
+            Console.WriteLine("To start the program you must load the wine list.");
+            Console.WriteLine();
+            Console.WriteLine("#############-Load Menu-#############");
+            Console.WriteLine("1) Load Wine List");
+            Console.WriteLine("2) Exit the program");
+            Console.WriteLine("#############-Load Menu-#############");
+            Console.Write("Press the number of the menu item: ");
+        }
+
+        /// <summary>
+        /// Outputs the Main Menu to the console
+        /// </summary>
+        private void PrintMainMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine("#############-Main Menu-#############");
+            Console.WriteLine("1) Print Wine List");
+            Console.WriteLine("2) Search for Wine");
+            Console.WriteLine("3) Add a new Wine");
+            Console.WriteLine("4) Exit the program");
+            Console.WriteLine("#############-Main Menu-#############");
+            Console.Write("Press the number of the menu item: ");
+        }
+
+        /// <summary>
+        /// Outputs the Search Menu to the console
+        /// </summary>
+        private void PrintSearchMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine("############-Search Menu-############");
+            Console.WriteLine("1) Search by ID");
+            Console.WriteLine("2) Search by Discription");
+            Console.WriteLine("3) Search by Pack");
+            Console.WriteLine("4) Return to Main Menu");
+            Console.WriteLine("############-Search Menu-############");
+            Console.Write("Press the number of the menu item: ");
+        }
+
+        public void PrintFileLoadedMessage()
+        {
+            Console.WriteLine("********Wines have been loaded********");
         }
     }
 }

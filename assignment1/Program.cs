@@ -1,14 +1,8 @@
-﻿//Author: David Barnes
-//CIS 237
-//Assignment 1
-/*
- * The Menu Choices Displayed By The UI
- * 1. Load Wine List From CSV
- * 2. Print The Entire List Of Items
- * 3. Search For An Item
- * 4. Add New Item To The List
- * 5. Exit Program
- */
+﻿/* Jeffrey Martin
+   CIS237 Advanced C3
+   9-20-20196
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,98 +12,86 @@ using System.Threading.Tasks;
 namespace assignment1
 {
     class Program
-    {
+    {//This file will handle the logic needed to run the menus in the userInterface.
+
         static void Main(string[] args)
         {
-            //Set a constant for the size of the collection
-            const int wineItemCollectionSize = 4000;
+            //****************************
+            //Constants
+            //****************************
+            const String CSV_FILE_PATH = "../../../datafiles/WineList.csv";//Holds path and file name of the csv file
+            const int MAX_ARRAY_SIZE = 4000;
 
-            //Set a constant for the path to the CSV File
-            const string pathToCSVFile = "../../../datafiles/winelist.csv";
+            //****************************
+            //Class Variables
+            //****************************
 
-            //Create an instance of the UserInterface class
-            UserInterface userInterface = new UserInterface();
+            WineItemCollection wineItemCollection = new WineItemCollection(MAX_ARRAY_SIZE);//Creates the array to hold WineItems by creating an instance of the class
 
-            //Create an instance of the WineItemCollection class
-            IWineCollection wineItemCollection = new WineItemCollection(wineItemCollectionSize);
+            CSVProcessor loadRecords = new CSVProcessor();//Creates an instance of the CSVProcessor class to process the CSV file.
 
-            //Create an instance of the CSVProcessor class
-            CSVProcessor csvProcessor = new CSVProcessor();
+            UserInterface ui = new UserInterface();//Instance of the UserInterface class to run the menus'
 
-            //Display the Welcome Message to the user
-            userInterface.DisplayWelcomeGreeting();
 
-            //Display the Menu and get the response. Store the response in the choice integer
-            //This is the 'primer' run of displaying and getting.
-            int choice = userInterface.DisplayMenuAndGetResponse();
+            // Logic for the Start Menu found in UserInterface.cs
+            int loadChoice = ui.GetUserStartMenu();
 
-            while (choice != 5)
+            if (loadChoice == 1)
+            {
+
+                loadRecords.ReadFile(CSV_FILE_PATH, wineItemCollection);
+                ui.PrintFileLoadedMessage();
+
+                //Logic for the Maine Menu found in UserInterface.cs
+                int choice = ui.GetUserInputMainMenu();
+
+                while (choice != 4)
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            ui.PrintOutput(wineItemCollection.CreateListString());
+                            break;
+                        case 2:
+                            SearchForWine(wineItemCollection);
+                            break;
+                        default:
+                            ui.AddWine(wineItemCollection);
+                            break;
+                    }
+                    choice = ui.GetUserInputMainMenu();
+                }
+            }
+        }
+        /// <summary>
+        /// Logic used for the PrintSearchMenu found in UserInterface.cs
+        /// </summary>
+        /// <param name="WineCollection">WineItem[]</param>
+        /// <param name="ExamineFile">CSVProcessor</param>
+        static void SearchForWine(WineItemCollection WineCollection)
+        {
+            WineItem winItem = new WineItem("1", "2", "3");
+
+
+            UserInterface ui = new UserInterface();
+            int choice = ui.GetUserInputSearchMenu();
+            while (choice != 4)
             {
                 switch (choice)
                 {
                     case 1:
-                        //Load the CSV File
-                        bool success = csvProcessor.ImportCSV(wineItemCollection, pathToCSVFile);
-                        if (success)
-                        {
-                            //Display Success Message
-                            userInterface.DisplayImportSuccess();
-                        }
-                        else
-                        {
-                            //Display Fail Message
-                            userInterface.DisplayImportError();
-                        }
+                        ui.SearchBy(WineCollection, nameof(winItem.ID));
                         break;
-
                     case 2:
-                        //Print Entire List Of Items
-                        string[] allItems = wineItemCollection.GetPrintStringsForAllItems();
-                        if (allItems.Length > 0)
-                        {
-                            //Display all of the items
-                            userInterface.DisplayAllItems(allItems);
-                        }
-                        else
-                        {
-                            //Display error message for all items
-                            userInterface.DisplayAllItemsError();
-                        }
+                        ui.SearchBy(WineCollection, nameof(winItem.Description));
                         break;
-
-                    case 3:
-                        //Search For An Item
-                        string searchQuery = userInterface.GetSearchQuery();
-                        string itemInformation = wineItemCollection.FindById(searchQuery);
-                        if (itemInformation != null)
-                        {
-                            userInterface.DisplayItemFound(itemInformation);
-                        }
-                        else
-                        {
-                            userInterface.DisplayItemFoundError();
-                        }
-                        break;
-
-                    case 4:
-                        //Add A New Item To The List
-                        string[] newItemInformation = userInterface.GetNewItemInformation();
-                        if (wineItemCollection.FindById(newItemInformation[0]) == null)
-                        {
-                            wineItemCollection.AddNewItem(newItemInformation[0], newItemInformation[1], newItemInformation[2]);
-                            userInterface.DisplayAddWineItemSuccess();
-                        }
-                        else
-                        {
-                            userInterface.DisplayItemAlreadyExistsError();
-                        }
+                    default:
+                        ui.SearchBy(WineCollection, nameof(winItem.Pack));
                         break;
                 }
-
-                //Get the new choice of what to do from the user
-                choice = userInterface.DisplayMenuAndGetResponse();
+                choice = ui.GetUserInputSearchMenu();
             }
-
         }
+
     }
 }

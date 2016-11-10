@@ -1,6 +1,7 @@
-﻿//Author: David Barnes
-//CIS 237
-//Assignment 1
+﻿/* Jeffrey Martin
+   CIS237 Advanced C3
+   9-20-20196
+*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,40 +9,72 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace assignment1
-{
+{// Class to hold one record of a wine item.
     class WineItem
     {
-        //Private Class Level Variables
-        private string id;
-        private string description;
-        private string pack;
+        //*********************************
+        //Backing Fields
+        //*********************************
+        private string _id;
+        private string _description;
+        private string _pack;
 
-        //Public Property to Get the Id
-        public string Id
+        //*********************************
+        //Properties
+        //*********************************
+
+        public string ID
         {
-            get
-            {
-                return this.id;
-            }
+            get { return _id; }
+            set { _id = value; }
         }
 
-        //Default Constuctor
-        public WineItem() { }
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
+        public string Pack
+        {
+            get { return _pack; }
+            set { _pack = value; }
+        }
 
-        //3 Parameter Constructor
+        //*********************************
+        //Constructors
+        //*********************************
         public WineItem(string id, string description, string pack)
-        {
-            this.id = id;
-            this.description = description;
-            this.pack = pack;
+        {  // 3 Parameter Constructor
+            this._id = id;
+            this._description = description;
+            this._pack = pack;
         }
 
-        //Override ToString Method to concatenate the fields together.
+        public WineItem()
+        {
+            //Default Parameter Constructor
+        }
+
+        //*********************************
+        //Methods
+        //*********************************
+
+        /// <summary>
+        /// Creates the overide string for each WineItem 
+        /// </summary>
+        /// <returns>string</returns>
+        private string CreateOverideString()
+        {
+            string overideString = $"{this._description} Wine ID: {this._id}; Sold in: {this._pack}";
+            return overideString;
+        }
+        /// <summary>
+        /// Creates the overide of ToString() for each WineItem 
+        /// </summary>
+        /// <returns>string</returns>
         public override string ToString()
         {
-            return "Id: " + id + ", Description: " + description + ", Pack: " + pack;
+            return CreateOverideString();
         }
-
-
     }
 }

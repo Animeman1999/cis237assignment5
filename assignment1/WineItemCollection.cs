@@ -1,6 +1,7 @@
-﻿//Author: David Barnes
-//CIS 237
-//Assignment 1
+﻿/* Jeffrey Martin
+   CIS237 Advanced C3
+   9-20-20196
+*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,77 +10,82 @@ using System.Threading.Tasks;
 
 namespace assignment1
 {
-    class WineItemCollection : IWineCollection
-    {
-        //Private Variables
-        WineItem[] wineItems;
-        int wineItemsLength;
+    class WineItemCollection
+    {//Class to hold the array of WineItems
 
-        //Constuctor. Must pass the size of the collection.
+        //*********************************
+        //Backing Fields
+        //*********************************
+        WineItem[] WineCollection;
+        int wineCollectionLength;
+
+        //*********************************
+        //Constructor
+        //*********************************
+
+
         public WineItemCollection(int size)
         {
-            wineItems = new WineItem[size];
-            wineItemsLength = 0;
+            WineCollection = new WineItem[size];
+            wineCollectionLength = 0;
         }
 
-        //Add a new item to the collection
+        //*********************************
+        //Methods
+        //*********************************
+
         public void AddNewItem(string id, string description, string pack)
         {
-            //Add a new WineItem to the collection. Increase the Length variable.
-            wineItems[wineItemsLength] = new WineItem(id, description, pack);
-            wineItemsLength++;
+            WineCollection[wineCollectionLength] = new WineItem(id, description, pack);
+            wineCollectionLength++;
         }
-        
-        //Get The Print String Array For All Items
-        public string[] GetPrintStringsForAllItems()
-        {
-            //Create and array to hold all of the printed strings
-            string[] allItemStrings = new string[wineItemsLength];
-            //set a counter to be used
-            int counter = 0;
 
-            //If the wineItemsLength is greater than 0, create the array of strings
-            if (wineItemsLength > 0)
+        public string[] CreateListString()
+        {
+            string[] listString = new string[wineCollectionLength];
+            int count = 0;
+
+            if (wineCollectionLength > 0)
             {
-                //For each item in the collection
-                foreach (WineItem wineItem in wineItems)
+                foreach (WineItem wineItem in WineCollection)
                 {
-                    //if the current item is not null.
                     if (wineItem != null)
                     {
-                        //Add the results of calling ToString on the item to the string array.
-                        allItemStrings[counter] = wineItem.ToString();
-                        counter++;
+                        listString[count] = $"{wineItem.ID,5} {wineItem.Description,-60} {wineItem.Pack,10}";
                     }
+                    count++;
                 }
             }
-            //Return the array of item strings
-            return allItemStrings;
+            return listString;
         }
 
-        //Find an item by it's Id
-        public string FindById(string id)
-        {
-            //Declare return string for the possible found item
-            string returnString = null;
-
-            //For each WineItem in wineItems
-            foreach (WineItem wineItem in wineItems)
+        public string SearchBy(string searchFor, string propertyName)
+        {//Generic method to search any of the WineItem properties for the data specified by the user
+            bool found = false;
+            string listString = "*********************************************************************" + Environment.NewLine;
+            foreach (WineItem wineItem in WineCollection)
             {
-                //If the wineItem is not null
+
                 if (wineItem != null)
                 {
-                    //if the wineItem Id is the same as the search id
-                    if (wineItem.Id == id)
+                    //String to hold the value held in the property converted to lowercase. The various Gets are used to enable any property to be passed in.
+                    string propertyValue = wineItem.GetType().GetProperty(propertyName).GetValue(wineItem).ToString().ToLower();
+
+                    //String to hold the value of the searchFor converted to lowercase.
+                    string searchValue = searchFor.ToString();
+                    if (propertyValue.Contains(searchValue))
                     {
-                        //Set the return string to the result of the wineItem's ToString method
-                        returnString = wineItem.ToString();
+                        found = true;
+                        listString += wineItem + Environment.NewLine;
                     }
                 }
             }
-            //Return the returnString
-            return returnString;
+            if (!found)
+            {
+                listString += searchFor + " was not found." + Environment.NewLine;
+            }
+            listString += "*********************************************************************" + Environment.NewLine;
+            return listString;
         }
-
     }
 }
