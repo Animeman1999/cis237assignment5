@@ -16,8 +16,10 @@ namespace assignment1
         //*********************************
         //Backing Fields
         //*********************************
-        WineItem[] WineCollection;
-        int wineCollectionLength;
+        //WineItem[] WineCollection;
+        //int wineCollectionLength;
+
+        BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
 
         //*********************************
         //Constructor
@@ -26,8 +28,8 @@ namespace assignment1
 
         public WineItemCollection(int size)
         {
-            WineCollection = new WineItem[size];
-            wineCollectionLength = 0;
+            //WineCollection = new WineItem[size];
+            //wineCollectionLength = 0;
         }
 
         //*********************************
@@ -36,48 +38,83 @@ namespace assignment1
 
         public void AddNewItem(string id, string description, string pack)
         {
-            WineCollection[wineCollectionLength] = new WineItem(id, description, pack);
-            wineCollectionLength++;
+            //WineCollection[wineCollectionLength] = new WineItem(id, description, pack);
+            //wineCollectionLength++;
         }
 
         public string[] CreateListString()
         {
-            string[] listString = new string[wineCollectionLength];
-            int count = 0;
+            //string[] listString = new string[wineCollectionLength];
+            //int count = 0;
 
-            if (wineCollectionLength > 0)
+            //if (wineCollectionLength > 0)
+            //{
+            //    foreach (WineItem wineItem in WineCollection)
+            //    {
+            //        if (wineItem != null)
+            //        {
+            //            listString[count] = $"{wineItem.ID.ToString(),5} {wineItem.Description,-60} {wineItem.Pack,10}";
+            //        }
+            //        count++;
+            //    }
+            //}
+
+            
+            int count = 0;
+            foreach (Beverage beverage in beveageEntities.Beverages)
             {
-                foreach (WineItem wineItem in WineCollection)
-                {
-                    if (wineItem != null)
-                    {
-                        listString[count] = $"{wineItem.ID,5} {wineItem.Description,-60} {wineItem.Pack,10}";
-                    }
-                    count++;
-                }
+                count++;
+            }
+            string[] listString = new string[count];
+            count = 0;
+            foreach (Beverage beverage in beveageEntities.Beverages)
+            {
+                listString[count] = beverage.name.Trim() + " " + beverage.id + " " + beverage.pack.Trim() + " " + beverage.pack + " " + beverage.price + Environment.NewLine;
+                count++;
             }
             return listString;
         }
 
         public string SearchBy(string searchFor, string propertyName)
         {//Generic method to search any of the WineItem properties for the data specified by the user
+            List<Beverage> queryBeverages = null;
+
             bool found = false;
             string listString = "*********************************************************************" + Environment.NewLine;
-            foreach (WineItem wineItem in WineCollection)
-            {
-
-                if (wineItem != null)
+            switch (propertyName)
                 {
-                    //String to hold the value held in the property converted to lowercase. The various Gets are used to enable any property to be passed in.
-                    string propertyValue = wineItem.GetType().GetProperty(propertyName).GetValue(wineItem).ToString().ToLower();
-
-                    //String to hold the value of the searchFor converted to lowercase.
-                    string searchValue = searchFor.ToString();
-                    if (propertyValue.Contains(searchValue))
+                case nameof(Beverage.id):
+                    queryBeverages = beveageEntities.Beverages.Where(
+                                    bev => bev.id.ToLower().Contains(searchFor.ToLower())
+                                    ).ToList();
+                    break;
+                case nameof(Beverage.name):
+                    queryBeverages = beveageEntities.Beverages.Where(
+                                    bev => bev.name.ToLower().Contains(searchFor.ToLower())
+                                    ).ToList();
+                    break;
+                case nameof(Beverage.pack):
+                    queryBeverages = beveageEntities.Beverages.Where(
+                                    bev => bev.pack.ToLower().Contains(searchFor.ToLower())
+                                    ).ToList();
+                    break;
+                case nameof(Beverage.price):
+                    decimal searchForDec = 0;
+                    if (Decimal.TryParse(searchFor, out searchForDec))
                     {
-                        found = true;
-                        listString += wineItem + Environment.NewLine;
+                        queryBeverages = beveageEntities.Beverages.Where(
+                                        bev => bev.price == searchForDec
+                                        ).ToList();
                     }
+                    break;
+                }
+
+            if (queryBeverages != null)
+            {
+                foreach (Beverage beverage in queryBeverages)
+                {
+                    listString += beverage.name.Trim() + " " + beverage.id + " " + beverage.pack.Trim() + " " + beverage.pack + " " + beverage.price + Environment.NewLine;
+                    found = true;
                 }
             }
             if (!found)

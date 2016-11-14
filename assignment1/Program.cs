@@ -32,17 +32,15 @@ namespace assignment1
 
             UserInterface ui = new UserInterface();//Instance of the UserInterface class to run the menus'
 
+            BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+
+            foreach (Beverage beverage in beverageEntities.Beverages)
+            {
+                Console.WriteLine(beverage.id =beverage.id + " " + beverage.name.Trim() + " "  + beverage.pack.Trim() + " " + beverage.price + " " + beverage.active + Environment.NewLine);
+            }
 
             // Logic for the Start Menu found in UserInterface.cs
-            int loadChoice = ui.GetUserStartMenu();
-
-            if (loadChoice == 1)
-            {
-
-                loadRecords.ReadFile(CSV_FILE_PATH, wineItemCollection);
-                ui.PrintFileLoadedMessage();
-
-                //Logic for the Maine Menu found in UserInterface.cs
+            
                 int choice = ui.GetUserInputMainMenu();
 
                 while (choice != 4)
@@ -61,7 +59,7 @@ namespace assignment1
                     }
                     choice = ui.GetUserInputMainMenu();
                 }
-            }
+            
         }
         /// <summary>
         /// Logic used for the PrintSearchMenu found in UserInterface.cs
@@ -75,18 +73,21 @@ namespace assignment1
 
             UserInterface ui = new UserInterface();
             int choice = ui.GetUserInputSearchMenu();
-            while (choice != 4)
+            while (choice != 5)
             {
                 switch (choice)
                 {
                     case 1:
-                        ui.SearchBy(WineCollection, nameof(winItem.ID));
+                        ui.SearchBy(WineCollection, nameof(Beverage.id));
                         break;
                     case 2:
-                        ui.SearchBy(WineCollection, nameof(winItem.Description));
+                        ui.SearchBy(WineCollection, nameof(Beverage.name));
+                        break;
+                    case 3:
+                        ui.SearchBy(WineCollection, nameof(Beverage.pack));
                         break;
                     default:
-                        ui.SearchBy(WineCollection, nameof(winItem.Pack));
+                        ui.SearchBy(WineCollection, nameof(Beverage.price));
                         break;
                 }
                 choice = ui.GetUserInputSearchMenu();
