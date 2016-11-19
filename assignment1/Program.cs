@@ -24,8 +24,8 @@ namespace assignment1
 
             UserInterface ui = new UserInterface();//Instance of the UserInterface class to run the menus'
 
-            BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
-            
+            ui.StartUserInterface();            
+
             int choice = ui.GetUserInputMainMenu();
 
             while (choice != 5)
@@ -33,25 +33,24 @@ namespace assignment1
                 switch (choice)
                 {
                     case 1:
-                        ui.PrintOutput(wineItemCollection.CreateListString());
+                        ui.GetUserInputPrintWineListMenu(wineItemCollection);
+                        //ui.PrintOutput(wineItemCollection.CreateListString());
                         break;
                     case 2:
-                        SearchForWine(wineItemCollection, false);
+                        SearchForWineAndPossiblyDelete(wineItemCollection, false);
                         break;
                     case 3:
                         ui.AddWine(wineItemCollection);
                         break;
                     case 4:
-                        SearchForWine(wineItemCollection, true);
+                        SearchForWineAndPossiblyDelete(wineItemCollection, true);
                     break;
                 }
                 choice = ui.GetUserInputMainMenu();
             }
-            
         }
    
-
-        static void SearchForWine(WineAPI WineCollection, bool delete)
+        static void SearchForWineAndPossiblyDelete(WineAPI WineCollection, bool delete)
         {
             UserInterface ui = new UserInterface();
             int choice = ui.GetUserInputSearchMenu(delete);

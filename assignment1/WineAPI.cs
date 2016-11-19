@@ -51,26 +51,86 @@ namespace assignment1
 
         public string[] CreateListString()
         {
+            BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+
+            return OutputListString(beverageEntities);
+        }
+
+        public string[] CreateListStringOrderByName()
+        {
             
+            BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+            List<Beverage> orderByName = (from bev in beverageEntities.Beverages
+                             orderby bev.name ascending
+                             select bev).ToList();
 
-            BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
-
+            string[] tempString = new string[orderByName.Count];
             int count = 0;
-            foreach (Beverage beverage in beveageEntities.Beverages)
+            foreach (Beverage beverage in orderByName)
+            {
+                tempString[count] = FormatBeverageSting(beverage);
+                count++;
+            }
+
+            return tempString;
+        }
+
+        public string[] CreateListStringOrderByHighestPrice()
+        {
+
+            BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+            List<Beverage> orderByHighestPrice = (from bev in beverageEntities.Beverages
+                                          orderby bev.price descending
+                                          select bev).ToList();
+
+            string[] tempString = new string[orderByHighestPrice.Count];
+            int count = 0;
+            foreach (Beverage beverage in orderByHighestPrice)
+            {
+                tempString[count] = FormatBeverageSting(beverage);
+                count++;
+            }
+
+            return tempString;
+        }
+
+        public string[] CreateListStringOrderByLowestPrice()
+        {
+
+            BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+            List<Beverage> orderByLowestPrice = (from bev in beverageEntities.Beverages
+                                                  orderby bev.price ascending
+                                                  select bev).ToList();
+
+            string[] tempString = new string[orderByLowestPrice.Count];
+            int count = 0;
+            foreach (Beverage beverage in orderByLowestPrice)
+            {
+                tempString[count] = FormatBeverageSting(beverage);
+                count++;
+            }
+
+            return tempString;
+        }
+
+        private string [] OutputListString(BeverageJMartinEntities beverageEntities)
+        {
+            int count = 0;
+            foreach (Beverage beverage in beverageEntities.Beverages)
             {
                 count++;
             }
             string[] listString = new string[count];
             count = 0;
-            foreach (Beverage beverage in beveageEntities.Beverages)
+            foreach (Beverage beverage in beverageEntities.Beverages)
             {
-                listString[count] = FormatBevarageSting(beverage);
+                listString[count] = FormatBeverageSting(beverage);
                 count++;
             }
             return listString;
         }
 
-        private string FormatBevarageSting (Beverage beverage)
+        private string FormatBeverageSting (Beverage beverage)
         {
             return beverage.id + " " + beverage.pack.Trim() + " " +
                     beverage.price + " " + beverage.active +
@@ -132,7 +192,7 @@ namespace assignment1
             {
                 foreach (Beverage beverage in queryBeverages)
                 {
-                    listString += FormatBevarageSting(beverage) + Environment.NewLine;
+                    listString += FormatBeverageSting(beverage) + Environment.NewLine;
                     found = true;
                 }
             }

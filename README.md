@@ -3,6 +3,7 @@
 ## Due 11-22-2016
 
 ## Author
+Jeffrey Martin
 
 ## Description
 
@@ -80,5 +81,7 @@ Solution Requirements:
 | Total                                   | 100    |
 
 ## Outside Resources Used
+http://www.entityframeworktutorial.net/
 
 ## Known Problems, Issues, And/Or Errors in the Program
+None

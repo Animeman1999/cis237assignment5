@@ -7,11 +7,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics; //Needed to maxamize the console
+using System.Runtime.InteropServices; //Needed to maxamzie the console.
 
 namespace assignment1
 {
     class UserInterface
     {// Methods to handle all input and output for the program
+
+        //****************************************Code to Maxamize the Console***********************
+        [DllImport("kernel32.dll", ExactSpelling = true)]
+        private static extern IntPtr GetConsoleWindow();
+        private static IntPtr ThisConsole = GetConsoleWindow();
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private const int HIDE = 0;
+        private const int MAXIMIZE = 3;
+        private const int MINIMIZE = 6;
+        private const int RESTORE = 9;
+
+        /// <summary>
+        /// Method to maxamize the console window
+        /// </summary>
+        private static void MaximizeConsole()
+        {
+            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            ShowWindow(ThisConsole, MAXIMIZE);
+        }
+
+        /// <summary>
+        /// Adjust the console to increase the console buffer, change the title and maxamize the window
+        /// </summary>
+        public void StartUserInterface()
+        {
+            Console.BufferHeight = Int16.MaxValue - 1;
+            Console.Title = "Wine list from a Database on a server";
+            MaximizeConsole();
+        }
 
         /// <summary>
         /// Handles input and output of the Start Menu
@@ -52,6 +84,38 @@ namespace assignment1
                 Console.WriteLine();
             }
             return Int16.Parse(inputString);
+        }
+
+        public void GetUserInputPrintWineListMenu(WineAPI wineCollection)
+        {
+            this.PrintWineListMenu();
+            ConsoleKeyInfo inputChar = Console.ReadKey();
+            string inputString = inputChar.KeyChar.ToString();
+            Console.WriteLine();
+            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
+            {
+                Console.WriteLine(WriteInvalidEntry());
+                this.PrintWineListMenu();
+                inputChar = Console.ReadKey();
+                inputString = inputChar.KeyChar.ToString();
+                Console.WriteLine();
+            }
+            switch (inputString)
+            {
+                case "1":
+                    PrintOutput(wineCollection.CreateListString());
+                break;
+                case "2":
+                    PrintOutput(wineCollection.CreateListStringOrderByName());
+                    break;
+                case "3":
+                    PrintOutput(wineCollection.CreateListStringOrderByHighestPrice());
+                    break;
+                case "4":
+                    PrintOutput(wineCollection.CreateListStringOrderByLowestPrice());
+                    break;
+            }
+                
         }
 
         /// <summary>
@@ -292,6 +356,19 @@ namespace assignment1
             Console.WriteLine("2) Search for Wine");
             Console.WriteLine("3) Add a new Wine");
             Console.WriteLine("4) Delete a Wine");
+            Console.WriteLine("5) Exit the program");
+            Console.WriteLine("#############-Main Menu-#############");
+            Console.Write("Press the number of the menu item: ");
+        }
+
+        private void PrintWineListMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine("#############-Print Wine List Menu-#############");
+            Console.WriteLine("1) Print Wine List Unorderd");
+            Console.WriteLine("2) Print Wine List by Name");
+            Console.WriteLine("3) Print Wine List by Highest Price");
+            Console.WriteLine("4) Print Wine List by Lowest Price");
             Console.WriteLine("5) Exit the program");
             Console.WriteLine("#############-Main Menu-#############");
             Console.Write("Press the number of the menu item: ");
