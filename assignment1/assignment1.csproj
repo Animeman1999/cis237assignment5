@@ -85,12 +85,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Beverage.tt</DependentUpon>
     </Compile>
-    <Compile Include="CSVProcessor.cs" />
     <Compile Include="IWineCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInterface.cs" />
-    <Compile Include="WineItem.cs" />
     <Compile Include="WineItemCollection.cs" />
   </ItemGroup>
   <ItemGroup>
