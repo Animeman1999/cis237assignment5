@@ -338,5 +338,15 @@ namespace assignment1
         {
             Console.WriteLine(outputString);
         }
+
+        public void ErrorInDeleting()
+        {
+            Console.WriteLine("*************There was an error in deleting from the database. Items not deleted*************");
+        }
+
+        public void ErrorCapture(string errorMessage)
+        {
+            Console.WriteLine(errorMessage);
+        }
     }
 }

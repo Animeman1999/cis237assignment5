@@ -20,8 +20,6 @@ namespace assignment1
 
         public WineAPI()
         {
-            
-
         }
 
         //*********************************
@@ -45,28 +43,15 @@ namespace assignment1
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString() + " " + e.StackTrace);
+                UserInterface ui = new UserInterface();
+                ui.ErrorCapture (e.ToString() + " " + e.StackTrace);
             }
-            //WineCollection[wineCollectionLength] = new WineItem(id, description, pack);
-            //wineCollectionLength++;
+            
         }
 
         public string[] CreateListString()
         {
-            //string[] listString = new string[wineCollectionLength];
-            //int count = 0;
-
-            //if (wineCollectionLength > 0)
-            //{
-            //    foreach (WineItem wineItem in WineCollection)
-            //    {
-            //        if (wineItem != null)
-            //        {
-            //            listString[count] = $"{wineItem.ID.ToString(),5} {wineItem.Description,-60} {wineItem.Pack,10}";
-            //        }
-            //        count++;
-            //    }
-            //}
+            
 
             BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
 
@@ -165,7 +150,7 @@ namespace assignment1
                     if (ui.AreYouSure())
                     {
                         DelelteItem(queryBeverages);
-                        listString += Environment.NewLine + "The list was deleted"; 
+                        listString += Environment.NewLine + "The list was deleted" + Environment.NewLine; 
                     }
                     else
                     {
@@ -189,22 +174,27 @@ namespace assignment1
             {
                 tempBeverage = beveageEntities.Beverages.Find(beverage.id);
                 beveageEntities.Beverages.Remove(tempBeverage);
-                try
+
+                //Check if the beverage just deleted is in the database 
+                tempBeverage = beveageEntities.Beverages.Find(beverage.id);
+                //If the bevarage is still in the database add one to the count
+                if (tempBeverage == null)
                 {
-                    tempBeverage = beveageEntities.Beverages.Find(beverage);
                     count++;
                 }
-                catch
-                {
-
-                }
-                
             }
+            //If the count is not less than one, than at least one of the items was not succesffuly deleted
             if(count < 1)
             {
+                //All items successfully added so save the changes
                 beveageEntities.SaveChanges();
                 itemDeletedBool = true;
-                Console.WriteLine("Items Delleted at line 201 WineAPI");
+            }
+            else
+            {
+                //An item was not added correctly so do not save the changes and print out an error message.
+                UserInterface ui = new UserInterface();
+                ui.ErrorInDeleting();
             }
             
             return itemDeletedBool;
