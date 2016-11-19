@@ -17,103 +17,65 @@ namespace assignment1
         static void Main(string[] args)
         {
             //****************************
-            //Constants
-            //****************************
-            //const String CSV_FILE_PATH = "../../../datafiles/WineList.csv";//Holds path and file name of the csv file
-            const int MAX_ARRAY_SIZE = 4000;
-
-            //****************************
             //Class Variables
             //****************************
 
-            WineItemCollection wineItemCollection = new WineItemCollection(MAX_ARRAY_SIZE);//Creates the array to hold WineItems by creating an instance of the class
-
-            //CSVProcessor loadRecords = new CSVProcessor();//Creates an instance of the CSVProcessor class to process the CSV file.
+            WineAPI wineItemCollection = new WineAPI();
 
             UserInterface ui = new UserInterface();//Instance of the UserInterface class to run the menus'
 
             BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
-
-            //foreach (Beverage beverage in beverageEntities.Beverages)
-            //{
-            //    Console.WriteLine(beverage.id =beverage.id + " " + beverage.name.Trim() + " "  + beverage.pack.Trim() + " " + beverage.price + " " + beverage.active + Environment.NewLine);
-            //}
-
-            // Logic for the Start Menu found in UserInterface.cs
             
-                int choice = ui.GetUserInputMainMenu();
+            int choice = ui.GetUserInputMainMenu();
 
-                while (choice != 5)
+            while (choice != 5)
+            {
+                switch (choice)
                 {
-                    switch (choice)
-                    {
-                        case 1:
-                            ui.PrintOutput(wineItemCollection.CreateListString());
-                            break;
-                        case 2:
-                            SearchForWine(wineItemCollection);
-                            break;
-                        case 3:
-                            ui.AddWine(wineItemCollection);
-                            break;
-                        case 4:
-                            SearchForWineToDelete(wineItemCollection);
+                    case 1:
+                        ui.PrintOutput(wineItemCollection.CreateListString());
                         break;
-                    }
-                    choice = ui.GetUserInputMainMenu();
+                    case 2:
+                        SearchForWine(wineItemCollection, false);
+                        break;
+                    case 3:
+                        ui.AddWine(wineItemCollection);
+                        break;
+                    case 4:
+                        SearchForWine(wineItemCollection, true);
+                    break;
                 }
+                choice = ui.GetUserInputMainMenu();
+            }
             
         }
    
 
-        static void SearchForWine(WineItemCollection WineCollection)
+        static void SearchForWine(WineAPI WineCollection, bool delete)
         {
             UserInterface ui = new UserInterface();
-            int choice = ui.GetUserInputSearchMenu();
-            while (choice != 5)
+            int choice = ui.GetUserInputSearchMenu(delete);
+            while (choice != 6)
             {
                 switch (choice)
                 {
                     case 1:
-                        ui.SearchBy(WineCollection, nameof(Beverage.id), false);
+                        ui.SearchBy(WineCollection, nameof(Beverage.id), delete);
                         break;
                     case 2:
-                        ui.SearchBy(WineCollection, nameof(Beverage.name), false);
+                        ui.SearchBy(WineCollection, nameof(Beverage.name), delete);
                         break;
                     case 3:
-                        ui.SearchBy(WineCollection, nameof(Beverage.pack), false);
+                        ui.SearchBy(WineCollection, nameof(Beverage.pack), delete);
                         break;
-                    default:
-                        ui.SearchBy(WineCollection, nameof(Beverage.price), false);
+                    case 4:
+                        ui.SearchBy(WineCollection, nameof(Beverage.price), delete);
                         break;
-                }
-                choice = ui.GetUserInputSearchMenu();
-            }
-        }
-
-
-        static void SearchForWineToDelete(WineItemCollection WineCollection)
-        {
-            UserInterface ui = new UserInterface();
-            int choice = ui.GetUserInputDeleteMenu();
-            while (choice != 5)
-            {
-                switch (choice)
-                {
-                    case 1:
-                        ui.SearchBy(WineCollection, nameof(Beverage.id), true);
-                        break;
-                    case 2:
-                        ui.SearchBy(WineCollection, nameof(Beverage.name), true);
-                        break;
-                    case 3:
-                        ui.SearchBy(WineCollection, nameof(Beverage.pack), true);
-                        break;
-                    default:
-                        ui.SearchBy(WineCollection, nameof(Beverage.price), true);
+                    case 5:
+                        ui.SearchBy(WineCollection, nameof(Beverage.active), delete);
                         break;
                 }
-                choice = ui.GetUserInputDeleteMenu();
+                choice = ui.GetUserInputSearchMenu(delete);
             }
         }
     }

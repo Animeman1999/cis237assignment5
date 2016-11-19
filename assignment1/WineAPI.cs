@@ -10,26 +10,18 @@ using System.Threading.Tasks;
 
 namespace assignment1
 {
-    class WineItemCollection
+    class WineAPI
     {//Class to hold the array of WineItems
-
-        //*********************************
-        //Backing Fields
-        //*********************************
-        //WineItem[] WineCollection;
-        //int wineCollectionLength;
-
-        
 
         //*********************************
         //Constructor
         //*********************************
 
 
-        public WineItemCollection(int size)
+        public WineAPI()
         {
-            //WineCollection = new WineItem[size];
-            //wineCollectionLength = 0;
+            
+
         }
 
         //*********************************
@@ -87,14 +79,21 @@ namespace assignment1
             count = 0;
             foreach (Beverage beverage in beveageEntities.Beverages)
             {
-                listString[count] = beverage.id + " " + beverage.name.Trim() + " " +  beverage.pack.Trim() + " " + beverage.pack + " " + beverage.price + Environment.NewLine;
+                listString[count] = FormatBevarageSting(beverage);
                 count++;
             }
             return listString;
         }
 
-        public string SearchBy(string searchFor, string propertyName, bool delete)
-        {//Generic method to search any of the WineItem properties for the data specified by the user
+        private string FormatBevarageSting (Beverage beverage)
+        {
+            return beverage.id + " " + beverage.pack.Trim() + " " +
+                    beverage.price + " " + beverage.active +
+                    " " + beverage.name.Trim();
+        }
+
+        public string SearchByAndPossiblyDelete(string searchFor, string propertyName, bool delete)
+        {//Method to search any of the Bevarage properties for the data specified by the user
 
             BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
             List<Beverage> queryBeverages = null;
@@ -127,13 +126,28 @@ namespace assignment1
                                         ).ToList();
                     }
                     break;
+                case nameof(Beverage.active):
+                    bool tempBool;
+                    
+                    if (searchFor == "True")
+                    {
+                        tempBool = true;
+                    } 
+                    else
+                    {
+                        tempBool = false;
+                    }
+                    queryBeverages = beveageEntities.Beverages.Where(
+                        bev => bev.active == tempBool
+                        ).ToList();
+                    break;
                 }
 
             if (queryBeverages != null)
             {
                 foreach (Beverage beverage in queryBeverages)
                 {
-                    listString += beverage.name.Trim() + " " + beverage.id + " " + beverage.pack.Trim() + " " + beverage.pack + " " + beverage.price + Environment.NewLine;
+                    listString += FormatBevarageSting(beverage) + Environment.NewLine;
                     found = true;
                 }
             }
@@ -141,22 +155,26 @@ namespace assignment1
             {
                 listString += searchFor + " was not found." + Environment.NewLine;
             }
+            else
+            {
+                //When you want the deleted version of this method to be used.
+                if (delete)
+                {
+                    UserInterface ui = new UserInterface();
+                    ui.OutputAString(listString);
+                    if (ui.AreYouSure())
+                    {
+                        DelelteItem(queryBeverages);
+                        listString += Environment.NewLine + "The list was deleted"; 
+                    }
+                    else
+                    {
+                        listString = "";
+                    }
+            }
             listString += "*********************************************************************" + Environment.NewLine;
 
-            //When you want the deleted version of this method to be used.
-            if (delete)
-            {
-                UserInterface ui = new UserInterface();
-                ui.OutputAString(listString);
-                if (ui.AreYouSure())
-                {
-                    DelelteItem(queryBeverages);
-                    listString += Environment.NewLine + "The list was deleted"; 
-                }
-                else
-                {
-                    listString = "";
-                }
+            
             }
             return listString;
         }
@@ -164,6 +182,7 @@ namespace assignment1
         public bool DelelteItem(List<Beverage> queryBeverages )
         {
             bool itemDeletedBool = false;
+            int count = 0;
             BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
             Beverage tempBeverage = new Beverage(); 
             foreach (Beverage beverage in queryBeverages)
@@ -173,16 +192,21 @@ namespace assignment1
                 try
                 {
                     tempBeverage = beveageEntities.Beverages.Find(beverage);
-                    itemDeletedBool = false;
+                    count++;
                 }
                 catch
                 {
-                    itemDeletedBool = true;
+
                 }
                 
             }
-
-            beveageEntities.SaveChanges();
+            if(count < 1)
+            {
+                beveageEntities.SaveChanges();
+                itemDeletedBool = true;
+                Console.WriteLine("Items Delleted at line 201 WineAPI");
+            }
+            
             return itemDeletedBool;
         }
     }

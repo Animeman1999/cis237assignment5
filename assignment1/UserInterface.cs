@@ -58,17 +58,17 @@ namespace assignment1
         /// Handles the input and output of the Search Menu
         /// </summary>
         /// <returns>int</returns>
-        public int GetUserInputSearchMenu()
+        public int GetUserInputSearchMenu(bool delete)
         {
-            this.PrintSearchMenu();
+            this.PrintSearchMenu(delete);
 
             ConsoleKeyInfo inputChar = Console.ReadKey();
             string inputString = inputChar.KeyChar.ToString();
             Console.WriteLine();
-            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
+            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5" && inputString != "6")
             {
                 Console.WriteLine(WriteInvalidEntry());
-                this.PrintSearchMenu();
+                this.PrintSearchMenu(delete);
                 inputChar = Console.ReadKey();
                 inputString = inputChar.KeyChar.ToString();
                 Console.WriteLine();
@@ -76,24 +76,7 @@ namespace assignment1
             return Int16.Parse(inputString);
         }
 
-        public int GetUserInputDeleteMenu()
-        {
-            this.PrintDeleteMenu();
-
-            ConsoleKeyInfo inputChar = Console.ReadKey();
-            string inputString = inputChar.KeyChar.ToString();
-            Console.WriteLine();
-            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
-            {
-                Console.WriteLine(WriteInvalidEntry());
-                this.PrintDeleteMenu();
-                inputChar = Console.ReadKey();
-                inputString = inputChar.KeyChar.ToString();
-                Console.WriteLine();
-            }
-            return Int16.Parse(inputString);
-        }
-
+        
         /// <summary>
         /// Generic invalid entry error message
         /// </summary>
@@ -125,17 +108,26 @@ namespace assignment1
         /// </summary>
         /// <param name="WineCollection">WineItem[]</param>
         /// <param name="propertyName">string</param>
-        public void SearchBy(WineItemCollection WineCollection, string propertyName, bool delete)
+        public void SearchBy(WineAPI WineCollection, string propertyName, bool delete)
         {
-            Console.Write($"Enter {propertyName}: ");
-            string input = Console.ReadLine();
+            string input;
+            if (propertyName == "active")
+            {
+                input = BoolInput("Do you want the active wines").ToString();
+            }
+            else
+            {
+                Console.Write($"Enter {propertyName}: ");
+                input = Console.ReadLine();
+            }
+            
             if (input == "")
             {
                 Console.WriteLine(WriteInvalidSpecificEntry(propertyName));
             }
             else
             {
-                Console.WriteLine(WineCollection.SearchBy(input, propertyName, delete));
+                Console.WriteLine(WineCollection.SearchByAndPossiblyDelete(input, propertyName, delete));
             }
         }
 
@@ -143,7 +135,7 @@ namespace assignment1
         /// Input sequence to create a new WineItem that calls a method to add it to the WineItem array.
         /// </summary>
         /// <param name="WineCollection">WineItem[]</param>
-        public void AddWine(WineItemCollection WineCollection)
+        public void AddWine(WineAPI WineCollection)
         {
             Console.Write("Enter Wine ID: ");
             string idInput = Console.ReadLine();
@@ -154,7 +146,7 @@ namespace assignment1
             }
             else
             {
-                string seachString = WineCollection.SearchBy(idInput, nameof(Beverage.id), false);
+                string seachString = WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false);
                 if (seachString.Contains("was not found"))
                 {
                     Console.Write("Enter Wine Description: ");
@@ -198,7 +190,7 @@ namespace assignment1
                     WineCollection.AddNewItem(idInput, descriptionInput, packInput, priceInputDec, wineActive);
                     
 
-                    Console.WriteLine(WineCollection.SearchBy(idInput, nameof(Beverage.id), false));
+                    Console.WriteLine(WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false));
                 }
                 else
                 {
@@ -308,33 +300,31 @@ namespace assignment1
         /// <summary>
         /// Outputs the Search Menu to the console
         /// </summary>
-        private void PrintSearchMenu()
+        private void PrintSearchMenu(bool delete)
         {
+            string searchDelete;
+            if (delete)
+            {
+                searchDelete = "Delete";
+            }
+            else
+            {
+                searchDelete = "Search";
+            }
             Console.WriteLine();
-            Console.WriteLine("############-Search Menu-############");
-            Console.WriteLine("1) Search by ID");
-            Console.WriteLine("2) Search by Discription");
-            Console.WriteLine("3) Search by Pack");
-            Console.WriteLine("4) Search by Price");
-            Console.WriteLine("5) Return to Main Menu");
-            Console.WriteLine("############-Search Menu-############");
-            Console.Write("Press the number of the menu item: ");
+            Console.WriteLine($"############-{searchDelete} Menu-############");
+            Console.WriteLine($"1) {searchDelete} by ID");
+            Console.WriteLine($"2) {searchDelete} by Discription");
+            Console.WriteLine($"3) {searchDelete} by Pack");
+            Console.WriteLine($"4) {searchDelete} by Price");
+            Console.WriteLine($"5) {searchDelete} by Active");
+
+            Console.WriteLine("6) Return to Main Menu");
+            Console.WriteLine($"############-{searchDelete} Menu-############");
+            Console.Write($"Press the number of the menu item: ");
         }
 
-        private void PrintDeleteMenu()
-        {
-            Console.WriteLine();
-            Console.WriteLine("############-Delete Menu-############");
-            Console.WriteLine("1) Delete by ID");
-            Console.WriteLine("2) Delete by Discription");
-            Console.WriteLine("3) Delete by Pack");
-            Console.WriteLine("4) Delete by Price");
-            Console.WriteLine("5) Return to Main Menu");
-            Console.WriteLine("############-Search Menu-############");
-            Console.Write("Press the number of the menu item: ");
-        }
-
-        public void PrintFileLoadedMessage()
+                public void PrintFileLoadedMessage()
         {
             Console.WriteLine("********Wines have been loaded********");
         }
