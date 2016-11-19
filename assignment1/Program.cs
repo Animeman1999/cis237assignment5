@@ -19,7 +19,7 @@ namespace assignment1
             //****************************
             //Constants
             //****************************
-            const String CSV_FILE_PATH = "../../../datafiles/WineList.csv";//Holds path and file name of the csv file
+            //const String CSV_FILE_PATH = "../../../datafiles/WineList.csv";//Holds path and file name of the csv file
             const int MAX_ARRAY_SIZE = 4000;
 
             //****************************
@@ -57,23 +57,17 @@ namespace assignment1
                             ui.AddWine(wineItemCollection);
                             break;
                         case 4:
-                        SearchForWineToDelete(wineItemCollection);
+                            SearchForWineToDelete(wineItemCollection);
                         break;
                     }
                     choice = ui.GetUserInputMainMenu();
                 }
             
         }
-        /// <summary>
-        /// Logic used for the PrintSearchMenu found in UserInterface.cs
-        /// </summary>
-        /// <param name="WineCollection">WineItem[]</param>
-        /// <param name="ExamineFile">CSVProcessor</param>
+   
+
         static void SearchForWine(WineItemCollection WineCollection)
         {
-            WineItem winItem = new WineItem("1", "2", "3");
-
-
             UserInterface ui = new UserInterface();
             int choice = ui.GetUserInputSearchMenu();
             while (choice != 5)
@@ -81,26 +75,25 @@ namespace assignment1
                 switch (choice)
                 {
                     case 1:
-                        ui.SearchBy(WineCollection, nameof(Beverage.id));
+                        ui.SearchBy(WineCollection, nameof(Beverage.id), false);
                         break;
                     case 2:
-                        ui.SearchBy(WineCollection, nameof(Beverage.name));
+                        ui.SearchBy(WineCollection, nameof(Beverage.name), false);
                         break;
                     case 3:
-                        ui.SearchBy(WineCollection, nameof(Beverage.pack));
+                        ui.SearchBy(WineCollection, nameof(Beverage.pack), false);
                         break;
                     default:
-                        ui.SearchBy(WineCollection, nameof(Beverage.price));
+                        ui.SearchBy(WineCollection, nameof(Beverage.price), false);
                         break;
                 }
                 choice = ui.GetUserInputSearchMenu();
             }
         }
+
+
         static void SearchForWineToDelete(WineItemCollection WineCollection)
         {
-            WineItem winItem = new WineItem("1", "2", "3");
-
-
             UserInterface ui = new UserInterface();
             int choice = ui.GetUserInputDeleteMenu();
             while (choice != 5)
@@ -108,19 +101,19 @@ namespace assignment1
                 switch (choice)
                 {
                     case 1:
-                        ui.SearchBy(WineCollection, nameof(Beverage.id));
+                        ui.SearchBy(WineCollection, nameof(Beverage.id), true);
                         break;
                     case 2:
-                        ui.SearchBy(WineCollection, nameof(Beverage.name));
+                        ui.SearchBy(WineCollection, nameof(Beverage.name), true);
                         break;
                     case 3:
-                        ui.SearchBy(WineCollection, nameof(Beverage.pack));
+                        ui.SearchBy(WineCollection, nameof(Beverage.pack), true);
                         break;
                     default:
-                        ui.SearchBy(WineCollection, nameof(Beverage.price));
+                        ui.SearchBy(WineCollection, nameof(Beverage.price), true);
                         break;
                 }
-                choice = ui.GetUserInputSearchMenu();
+                choice = ui.GetUserInputDeleteMenu();
             }
         }
     }

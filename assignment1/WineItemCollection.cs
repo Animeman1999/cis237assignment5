@@ -93,7 +93,7 @@ namespace assignment1
             return listString;
         }
 
-        public string SearchBy(string searchFor, string propertyName)
+        public string SearchBy(string searchFor, string propertyName, bool delete)
         {//Generic method to search any of the WineItem properties for the data specified by the user
 
             BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
@@ -142,25 +142,47 @@ namespace assignment1
                 listString += searchFor + " was not found." + Environment.NewLine;
             }
             listString += "*********************************************************************" + Environment.NewLine;
+
+            //When you want the deleted version of this method to be used.
+            if (delete)
+            {
+                UserInterface ui = new UserInterface();
+                ui.OutputAString(listString);
+                if (ui.AreYouSure())
+                {
+                    DelelteItem(queryBeverages);
+                    listString += Environment.NewLine + "The list was deleted"; 
+                }
+                else
+                {
+                    listString = "";
+                }
+            }
             return listString;
         }
 
         public bool DelelteItem(List<Beverage> queryBeverages )
         {
-            bool itemDeletedBool = true;
+            bool itemDeletedBool = false;
             BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
-            Beverage testBeverage = new Beverage(); 
+            Beverage tempBeverage = new Beverage(); 
             foreach (Beverage beverage in queryBeverages)
             {
-                beveageEntities.Beverages.Remove(beverage);
-                testBeverage = beveageEntities.Beverages.Find(beverage);
-                if (testBeverage != null)
+                tempBeverage = beveageEntities.Beverages.Find(beverage.id);
+                beveageEntities.Beverages.Remove(tempBeverage);
+                try
                 {
+                    tempBeverage = beveageEntities.Beverages.Find(beverage);
                     itemDeletedBool = false;
                 }
+                catch
+                {
+                    itemDeletedBool = true;
+                }
+                
             }
-          
 
+            beveageEntities.SaveChanges();
             return itemDeletedBool;
         }
     }

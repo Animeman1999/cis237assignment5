@@ -43,7 +43,7 @@ namespace assignment1
             ConsoleKeyInfo inputChar = Console.ReadKey();
             string inputString = inputChar.KeyChar.ToString();
             Console.WriteLine();
-            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4")
+            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
             {
                 Console.WriteLine(WriteInvalidEntry());
                 this.PrintMainMenu();
@@ -125,7 +125,7 @@ namespace assignment1
         /// </summary>
         /// <param name="WineCollection">WineItem[]</param>
         /// <param name="propertyName">string</param>
-        public void SearchBy(WineItemCollection WineCollection, string propertyName)
+        public void SearchBy(WineItemCollection WineCollection, string propertyName, bool delete)
         {
             Console.Write($"Enter {propertyName}: ");
             string input = Console.ReadLine();
@@ -135,7 +135,7 @@ namespace assignment1
             }
             else
             {
-                Console.WriteLine(WineCollection.SearchBy(input, propertyName));
+                Console.WriteLine(WineCollection.SearchBy(input, propertyName, delete));
             }
         }
 
@@ -154,7 +154,7 @@ namespace assignment1
             }
             else
             {
-                string seachString = WineCollection.SearchBy(idInput, nameof(Beverage.id));
+                string seachString = WineCollection.SearchBy(idInput, nameof(Beverage.id), false);
                 if (seachString.Contains("was not found"))
                 {
                     Console.Write("Enter Wine Description: ");
@@ -198,7 +198,7 @@ namespace assignment1
                     WineCollection.AddNewItem(idInput, descriptionInput, packInput, priceInputDec, wineActive);
                     
 
-                    Console.WriteLine(WineCollection.SearchBy(idInput, nameof(Beverage.id)));
+                    Console.WriteLine(WineCollection.SearchBy(idInput, nameof(Beverage.id), false));
                 }
                 else
                 {
@@ -299,7 +299,8 @@ namespace assignment1
             Console.WriteLine("1) Print Wine List");
             Console.WriteLine("2) Search for Wine");
             Console.WriteLine("3) Add a new Wine");
-            Console.WriteLine("4) Exit the program");
+            Console.WriteLine("4) Delete a Wine");
+            Console.WriteLine("5) Exit the program");
             Console.WriteLine("#############-Main Menu-#############");
             Console.Write("Press the number of the menu item: ");
         }
@@ -336,6 +337,16 @@ namespace assignment1
         public void PrintFileLoadedMessage()
         {
             Console.WriteLine("********Wines have been loaded********");
+        }
+
+        public bool AreYouSure()
+        {
+           return BoolInput("Are you sure you wish to delete the listed wines");
+        }
+
+        public void OutputAString(string outputString)
+        {
+            Console.WriteLine(outputString);
         }
     }
 }
