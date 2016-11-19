@@ -46,26 +46,6 @@ namespace assignment1
         }
 
         /// <summary>
-        /// Handles input and output of the Start Menu
-        /// </summary>
-        /// <returns>int</returns>
-        public int GetUserStartMenu()
-        {
-            this.LoadMenu();
-            ConsoleKeyInfo inputChar = Console.ReadKey();
-            string inputString = inputChar.KeyChar.ToString();
-            Console.WriteLine();
-            while (inputString != "1" && inputString != "2")
-            {
-                Console.WriteLine(WriteInvalidEntry());
-                this.LoadMenu();
-                inputChar = Console.ReadKey();
-                inputString = inputChar.KeyChar.ToString();
-                Console.WriteLine();
-            }
-            return Int16.Parse(inputString);
-        }
-        /// <summary>
         /// Handles input and output of the Main Menu
         /// </summary>
         /// <returns></returns>
@@ -321,35 +301,46 @@ namespace assignment1
         /// <param name="printOutput">string</param>
         public void PrintOutput(string[] printOutput)
         {
-
-            Console.BufferHeight = Int16.MaxValue - 1;
             for (int index = 0; index < printOutput.Length; index++)
             {
+                if (index % 60 == 0)
+                {
+                    Console.WriteLine();
+                    PrintHeaders();
+                }
+
+                if (index % 2 == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
                 Console.Write(Environment.NewLine + printOutput[index]);
+               
             }
             Console.WriteLine();
         }
 
-        /// <summary>
-        /// Outputs the Load Menu to the console
-        /// </summary>
-        private void LoadMenu()
+        private void PrintHeaders()
         {
-            Console.WriteLine("Welcome to the wine list program.");
-            Console.WriteLine("To start the program you must load the wine list.");
             Console.WriteLine();
-            Console.WriteLine("#############-Load Menu-#############");
-            Console.WriteLine("1) Load Wine List");
-            Console.WriteLine("2) Exit the program");
-            Console.WriteLine("#############-Load Menu-#############");
-            Console.Write("Press the number of the menu item: ");
+            string id = "ID";
+            string price = "Price";
+            string pack = "Pack";
+            string name = "Name";
+            string active = "Active";
+            Console.WriteLine($"{id,-7} {price}   {pack,-19}  {name,-52}  {active}");
         }
+
 
         /// <summary>
         /// Outputs the Main Menu to the console
         /// </summary>
         private void PrintMainMenu()
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine();
             Console.WriteLine("#############-Main Menu-#############");
             Console.WriteLine("1) Print Wine List");
@@ -359,10 +350,12 @@ namespace assignment1
             Console.WriteLine("5) Exit the program");
             Console.WriteLine("#############-Main Menu-#############");
             Console.Write("Press the number of the menu item: ");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         private void PrintWineListMenu()
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine();
             Console.WriteLine("#############-Print Wine List Menu-#############");
             Console.WriteLine("1) Print Wine List Unorderd");
@@ -372,6 +365,7 @@ namespace assignment1
             Console.WriteLine("5) Exit the program");
             Console.WriteLine("#############-Main Menu-#############");
             Console.Write("Press the number of the menu item: ");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         /// <summary>
@@ -388,6 +382,7 @@ namespace assignment1
             {
                 searchDelete = "Search";
             }
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine();
             Console.WriteLine($"############-{searchDelete} Menu-############");
             Console.WriteLine($"1) {searchDelete} by ID");
@@ -399,6 +394,7 @@ namespace assignment1
             Console.WriteLine("6) Return to Main Menu");
             Console.WriteLine($"############-{searchDelete} Menu-############");
             Console.Write($"Press the number of the menu item: ");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
                 public void PrintFileLoadedMessage()

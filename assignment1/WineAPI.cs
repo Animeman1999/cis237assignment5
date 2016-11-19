@@ -132,9 +132,7 @@ namespace assignment1
 
         private string FormatBeverageSting (Beverage beverage)
         {
-            return beverage.id + " " + beverage.pack.Trim() + " " +
-                    beverage.price + " " + beverage.active +
-                    " " + beverage.name.Trim();
+            return $"{beverage.id, -7} {beverage.price:C}  {beverage.pack.Trim(), -19}  {beverage.name.Trim(), -52}  {beverage.active}";
         }
 
         public string SearchByAndPossiblyDelete(string searchFor, string propertyName, bool delete)
