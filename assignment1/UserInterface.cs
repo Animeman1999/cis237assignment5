@@ -65,10 +65,28 @@ namespace assignment1
             ConsoleKeyInfo inputChar = Console.ReadKey();
             string inputString = inputChar.KeyChar.ToString();
             Console.WriteLine();
-            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4")
+            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
             {
                 Console.WriteLine(WriteInvalidEntry());
                 this.PrintSearchMenu();
+                inputChar = Console.ReadKey();
+                inputString = inputChar.KeyChar.ToString();
+                Console.WriteLine();
+            }
+            return Int16.Parse(inputString);
+        }
+
+        public int GetUserInputDeleteMenu()
+        {
+            this.PrintDeleteMenu();
+
+            ConsoleKeyInfo inputChar = Console.ReadKey();
+            string inputString = inputChar.KeyChar.ToString();
+            Console.WriteLine();
+            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
+            {
+                Console.WriteLine(WriteInvalidEntry());
+                this.PrintDeleteMenu();
                 inputChar = Console.ReadKey();
                 inputString = inputChar.KeyChar.ToString();
                 Console.WriteLine();
@@ -136,38 +154,109 @@ namespace assignment1
             }
             else
             {
-                Console.Write("Enter Wine Description: ");
-                string descriptionInput = Console.ReadLine();
-                while (descriptionInput == "")
+                string seachString = WineCollection.SearchBy(idInput, nameof(Beverage.id));
+                if (seachString.Contains("was not found"))
                 {
-                    Console.WriteLine(WriteInvalidSpecificEntry("Wine Description"));
                     Console.Write("Enter Wine Description: ");
-                    descriptionInput = Console.ReadLine();
-                }
+                    string descriptionInput = Console.ReadLine();
+                    while (descriptionInput == "")
+                    {
+                        Console.WriteLine(WriteInvalidSpecificEntry("Wine Description"));
+                        Console.Write("Enter Wine Description: ");
+                        descriptionInput = Console.ReadLine();
+                    }
 
 
-                Console.Write("Enter Wine Pack: ");
-                string packInput = Console.ReadLine();
-                while (packInput == "")
-                {
-                    Console.WriteLine(WriteInvalidSpecificEntry("Wine Pack"));
                     Console.Write("Enter Wine Pack: ");
-                    packInput = Console.ReadLine();
+                    string packInput = Console.ReadLine();
+                    while (packInput == "")
+                    {
+                        Console.WriteLine(WriteInvalidSpecificEntry("Wine Pack"));
+                        Console.Write("Enter Wine Pack: ");
+                        packInput = Console.ReadLine();
+                    }
+
+                    decimal priceInputDec;
+                    Console.Write("Enter Price: ");
+                    string priceInput = Console.ReadLine();
+                    while (priceInput == "" || !(Decimal.TryParse(priceInput, out priceInputDec)))
+                    {
+                        Console.WriteLine("Invalid Wine Price");
+                        Console.Write("Enter Price: ");
+                        priceInput = Console.ReadLine();
+                    }
+
+                    bool wineActive = BoolInput("Is this wine active");                    
+
+
+
+                    //WineItem wineItemToAdd = new WineItem();
+                    //wineItemToAdd.ID = idInput;
+                    //wineItemToAdd.Description = descriptionInput;
+                    //wineItemToAdd.Pack = packInput;
+
+                    WineCollection.AddNewItem(idInput, descriptionInput, packInput, priceInputDec, wineActive);
+                    
+
+                    Console.WriteLine(WineCollection.SearchBy(idInput, nameof(Beverage.id)));
                 }
-
-                WineItem wineItemToAdd = new WineItem();
-                wineItemToAdd.ID = idInput;
-                wineItemToAdd.Description = descriptionInput;
-                wineItemToAdd.Pack = packInput;
-
-                WineCollection.AddNewItem(idInput, descriptionInput, packInput);
-                Console.WriteLine("**************************************************************************");
-                Console.WriteLine(wineItemToAdd + " has been added to the file");
-                Console.WriteLine("**************************************************************************");
-                Console.WriteLine();
-
-
+                else
+                {
+                    Console.WriteLine(idInput + " is allready used as an ID. Each ID must be unique.");
+                }
             }
+        }
+
+        /// <summary>
+        /// Generic method to test if a yes/no question was answered correctly and assign appropiate bool value 
+        /// </summary>
+        /// <param name="YesNoQuestion"></param>
+        /// <returns>bool</returns>
+        public bool BoolInput(string YesNoQuestion)
+        {
+            string inputKey;
+            //Print out the YesNoQuestion and get the users response
+            inputKey = GetBoolInput(YesNoQuestion);
+
+            //Get user response until correct data input
+            while (inputKey.ToLower().Trim() != "y" && inputKey.ToLower().Trim() != "yes" && inputKey.ToLower().Trim() != "n" && inputKey.ToLower().Trim() != "no")
+            {
+                ErrorMessage();
+                inputKey = GetBoolInput(YesNoQuestion);
+            }
+
+            //Assign correct bool value
+            if (inputKey.ToLower().Trim() == "y" || inputKey.ToLower().Trim() == "yes")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Generic method to print out the YesNoQuestion and get the users response
+        /// </summary>
+        /// <param name="YesNoQuestion"></param>
+        /// <returns>ConsoleKeyInfo</returns>
+        public string GetBoolInput(string YesNoQuestion)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"{YesNoQuestion}?");
+            Console.WriteLine("Enter Yes or No.");
+            string tempStringInfo = Console.ReadLine();
+            Console.WriteLine();
+            return tempStringInfo;
+        }
+
+        public void ErrorMessage()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine();
+            Console.WriteLine(" Invalid Entry please try again.");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         /// <summary>
@@ -225,7 +314,21 @@ namespace assignment1
             Console.WriteLine("1) Search by ID");
             Console.WriteLine("2) Search by Discription");
             Console.WriteLine("3) Search by Pack");
-            Console.WriteLine("4) Return to Main Menu");
+            Console.WriteLine("4) Search by Price");
+            Console.WriteLine("5) Return to Main Menu");
+            Console.WriteLine("############-Search Menu-############");
+            Console.Write("Press the number of the menu item: ");
+        }
+
+        private void PrintDeleteMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine("############-Delete Menu-############");
+            Console.WriteLine("1) Delete by ID");
+            Console.WriteLine("2) Delete by Discription");
+            Console.WriteLine("3) Delete by Pack");
+            Console.WriteLine("4) Delete by Price");
+            Console.WriteLine("5) Return to Main Menu");
             Console.WriteLine("############-Search Menu-############");
             Console.Write("Press the number of the menu item: ");
         }

@@ -19,7 +19,7 @@ namespace assignment1
         //WineItem[] WineCollection;
         //int wineCollectionLength;
 
-        BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
+        
 
         //*********************************
         //Constructor
@@ -36,8 +36,25 @@ namespace assignment1
         //Methods
         //*********************************
 
-        public void AddNewItem(string id, string description, string pack)
+        public void AddNewItem(string id, string description, string pack, decimal price, bool active)
         {
+            BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
+            Beverage addBevarage = new Beverage();
+            addBevarage.id = id;
+            addBevarage.name = description;
+            addBevarage.pack = pack;
+            addBevarage.price = price;
+            addBevarage.active = active;
+
+            try
+            {
+                beveageEntities.Beverages.Add(addBevarage);
+                beveageEntities.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString() + " " + e.StackTrace);
+            }
             //WineCollection[wineCollectionLength] = new WineItem(id, description, pack);
             //wineCollectionLength++;
         }
@@ -59,7 +76,8 @@ namespace assignment1
             //    }
             //}
 
-            
+            BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
+
             int count = 0;
             foreach (Beverage beverage in beveageEntities.Beverages)
             {
@@ -69,7 +87,7 @@ namespace assignment1
             count = 0;
             foreach (Beverage beverage in beveageEntities.Beverages)
             {
-                listString[count] = beverage.name.Trim() + " " + beverage.id + " " + beverage.pack.Trim() + " " + beverage.pack + " " + beverage.price + Environment.NewLine;
+                listString[count] = beverage.id + " " + beverage.name.Trim() + " " +  beverage.pack.Trim() + " " + beverage.pack + " " + beverage.price + Environment.NewLine;
                 count++;
             }
             return listString;
@@ -77,6 +95,8 @@ namespace assignment1
 
         public string SearchBy(string searchFor, string propertyName)
         {//Generic method to search any of the WineItem properties for the data specified by the user
+
+            BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
             List<Beverage> queryBeverages = null;
 
             bool found = false;
@@ -85,7 +105,7 @@ namespace assignment1
                 {
                 case nameof(Beverage.id):
                     queryBeverages = beveageEntities.Beverages.Where(
-                                    bev => bev.id.ToLower().Contains(searchFor.ToLower())
+                                    bev => bev.id.ToLower() == searchFor.ToLower()
                                     ).ToList();
                     break;
                 case nameof(Beverage.name):
@@ -123,6 +143,25 @@ namespace assignment1
             }
             listString += "*********************************************************************" + Environment.NewLine;
             return listString;
+        }
+
+        public bool DelelteItem(List<Beverage> queryBeverages )
+        {
+            bool itemDeletedBool = true;
+            BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
+            Beverage testBeverage = new Beverage(); 
+            foreach (Beverage beverage in queryBeverages)
+            {
+                beveageEntities.Beverages.Remove(beverage);
+                testBeverage = beveageEntities.Beverages.Find(beverage);
+                if (testBeverage != null)
+                {
+                    itemDeletedBool = false;
+                }
+            }
+          
+
+            return itemDeletedBool;
         }
     }
 }
