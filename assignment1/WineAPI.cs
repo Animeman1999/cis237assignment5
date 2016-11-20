@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 namespace assignment1
 {
     class WineAPI
-    {//Class to hold the array of WineItems
+    {//Class to act as an interface between the program and the database. Because the connection
+     //to the database could be down, every method is placed inside of try catch.
 
         //*********************************
         //Constructor
@@ -26,19 +27,31 @@ namespace assignment1
         //Methods
         //*********************************
 
-        public void AddNewItem(string id, string description, string pack, decimal price, bool active)
+        /// <summary>
+        /// Takes in the properties of a bevarage and adds it to the database
+        /// </summary>
+        /// <param name="id">string</param>
+        /// <param name="name">string</param>
+        /// <param name="pack">string</param>
+        /// <param name="price">decimal</param>
+        /// <param name="active">bool</param>
+        public void AddNewItem(string id, string name, string pack, decimal price, bool active)
         {
             try
             {
-                BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
+                //Open the databse
+                BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+                //Create a new beverage
                 Beverage addBevarage = new Beverage();
                 addBevarage.id = id;
-                addBevarage.name = description;
+                addBevarage.name = name;
                 addBevarage.pack = pack;
                 addBevarage.price = price;
                 addBevarage.active = active;
-                beveageEntities.Beverages.Add(addBevarage);
-                beveageEntities.SaveChanges();
+                //Add the new beverage with it's assigned properties to beverageEntites
+                beverageEntities.Beverages.Add(addBevarage);
+                //Save the changes to the databes made in this instance of beverageEntitites.
+                beverageEntities.SaveChanges();
             }
             catch (Exception e)
             {
@@ -53,8 +66,19 @@ namespace assignment1
             try
             {
                 BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
-                return OutputListString(beverageEntities);
-                
+                int count = 0;
+                foreach (Beverage beverage in beverageEntities.Beverages)
+                {
+                    count++;
+                }
+                string[] listString = new string[count];
+                count = 0;
+                foreach (Beverage beverage in beverageEntities.Beverages)
+                {
+                    listString[count] = FormatBeverageSting(beverage);
+                    count++;
+                }
+                return listString;
             }
             catch (Exception e)
             {
@@ -62,7 +86,7 @@ namespace assignment1
                 ui.ErrorCapture(e.ToString() + " " + e.StackTrace);
                 return null;
             }
-            
+
         }
 
         public string[] CreateListStringOrderByName()
@@ -149,32 +173,6 @@ namespace assignment1
            
         }
 
-        private string [] OutputListString(BeverageJMartinEntities beverageEntities)
-        {
-            try
-            {
-                int count = 0;
-                foreach (Beverage beverage in beverageEntities.Beverages)
-                {
-                    count++;
-                }
-                string[] listString = new string[count];
-                count = 0;
-                foreach (Beverage beverage in beverageEntities.Beverages)
-                {
-                    listString[count] = FormatBeverageSting(beverage);
-                    count++;
-                }
-                return listString;
-            }
-            catch (Exception e)
-            {
-                UserInterface ui = new UserInterface();
-                ui.ErrorCapture(e.ToString() + " " + e.StackTrace);
-                return null;
-            }
-            
-        }
 
         private string FormatBeverageSting (Beverage beverage)
         {
