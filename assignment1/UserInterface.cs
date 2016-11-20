@@ -13,10 +13,11 @@ using System.Runtime.InteropServices; //Needed to maxamzie the console.
 
 namespace assignment1
 {
+    /// <summary>
+    ///  Methods to handle all input and output for the program
+    /// </summary>
     class UserInterface
-    {// Methods to handle all input and output for the program
-
-        //****************************************Code to Maxamize the Console***********************
+    {   //****************************************Code to Maxamize the Console***********************
         [DllImport("kernel32.dll", ExactSpelling = true)]
         private static extern IntPtr GetConsoleWindow();
         private static IntPtr ThisConsole = GetConsoleWindow();
@@ -49,7 +50,7 @@ namespace assignment1
         /// <summary>
         /// Handles input and output of the Main Menu
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Int16</returns>
         public int GetUserInputMainMenu()
         {
             this.PrintMainMenu();
@@ -67,6 +68,10 @@ namespace assignment1
             return Int16.Parse(inputString);
         }
 
+        /// <summary>
+        /// Handles input and Output of the Print Wine List Menu
+        /// </summary>
+        /// <param name="wineCollection"></param>
         public void GetUserInputPrintWineListMenu(WineAPI wineCollection)
         {
             this.PrintWineListMenu();
@@ -82,6 +87,8 @@ namespace assignment1
                 Console.WriteLine();
             }
             Console.WriteLine("Connecting to database, this may take a while.");
+
+            //Output the list of wines by calling the appropriate sorting the user wants
             switch (inputString)
             {
                 case "1":
@@ -97,7 +104,6 @@ namespace assignment1
                     PrintOutput(wineCollection.CreateListStringOrderByLowestPrice());
                     break;
             }
-                
         }
 
         /// <summary>
@@ -184,6 +190,7 @@ namespace assignment1
         public void AddWine(WineAPI WineCollection)
         {
             ColorLineNoEnter("Enter Wine ID: ");
+            //Get the ID input
             string idInput = Console.ReadLine();
             if (idInput == "")
             {
@@ -191,10 +198,11 @@ namespace assignment1
 
             }
             else
-            {
+            {   //Check if the id the user input is all ready in the database
                 string seachString = WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false);
                 if (seachString.Contains("was not found"))
                 {
+                    //Get the Name of the wine
                     ColorLineNoEnter("Enter Wine Name: ");
                     string descriptionInput = Console.ReadLine();
                     while (descriptionInput == "")
@@ -204,6 +212,7 @@ namespace assignment1
                         descriptionInput = Console.ReadLine();
                     }
 
+                    //Get the Wine pack
                     ColorLineNoEnter("Enter Wine Pack: ");
                     string packInput = Console.ReadLine();
                     while (packInput == "")
@@ -213,6 +222,7 @@ namespace assignment1
                         packInput = Console.ReadLine();
                     }
 
+                    //Get the price
                     decimal priceInputDec;
                     ColorLineNoEnter("Enter Price: ");
                     string priceInput = Console.ReadLine();
@@ -223,18 +233,13 @@ namespace assignment1
                         priceInput = Console.ReadLine();
                     }
 
+                    //Get if the wine is active
                     bool wineActive = BoolInput("Is this wine active");                    
-
-
-
-                    //WineItem wineItemToAdd = new WineItem();
-                    //wineItemToAdd.ID = idInput;
-                    //wineItemToAdd.Description = descriptionInput;
-                    //wineItemToAdd.Pack = packInput;
-
+                    
+                    //Now that all the input has been recieved by the user call the method to add the wine
                     WineCollection.AddNewItem(idInput, descriptionInput, packInput, priceInputDec, wineActive);
                     
-
+                    //Output the wine that has been added
                     Console.WriteLine(WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false));
                 }
                 else
@@ -301,14 +306,16 @@ namespace assignment1
         /// <param name="printOutput">string</param>
         public void PrintOutput(string[] printOutput)
         {
+            //Go through the entire string array
             for (int index = 0; index < printOutput.Length; index++)
             {
+                //Every 60 items output the header
                 if (index % 60 == 0)
                 {
                     Console.WriteLine();
                     PrintHeaders();
                 }
-
+                //Change the color every other line of wine for easier reading
                 if (index % 2 == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -323,6 +330,9 @@ namespace assignment1
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Outputs the headers
+        /// </summary>
         private void PrintHeaders()
         {
             Console.WriteLine();
@@ -336,7 +346,7 @@ namespace assignment1
 
 
         /// <summary>
-        /// Outputs the Main Menu to the console
+        /// String to be output for the Main Menu 
         /// </summary>
         private void PrintMainMenu()
         {
@@ -352,6 +362,9 @@ namespace assignment1
             ColorLineNoEnter(outputString);
         }
 
+        /// <summary>
+        /// String to be output for the Print Wine List Menu
+        /// </summary>
         private void PrintWineListMenu()
         {
             string outputString = Environment.NewLine;
@@ -367,7 +380,7 @@ namespace assignment1
         }
 
         /// <summary>
-        /// Outputs the Search Menu to the console
+        /// String to be output for the Search/Delete Menu
         /// </summary>
         private void PrintSearchMenu(bool delete)
         {
@@ -393,26 +406,36 @@ namespace assignment1
             ColorLineNoEnter(outputString);
         }
 
+        /// <summary>
+        /// Method to be called from the WineAPI fo confirm the deleting of the wines found.
+        /// </summary>
+        /// <returns>bool</returns>
         public bool AreYouSure()
         {
            return BoolInput("Are you sure you wish to delete the listed wines");
         }
 
+        /// <summary>
+        /// Method to allow any other part of the program to output a string to the console
+        /// </summary>
+        /// <param name="outputString"></param>
         public void OutputAString(string outputString)
         {
             Console.WriteLine(outputString);
         }
 
+        /// <summary>
+        /// Error in Deleting message
+        /// </summary>
         public void ErrorInDeleting()
         {
             Console.WriteLine("*************There was an error in deleting from the database. Items not deleted*************");
         }
 
-        public void ErrorCapture(string errorMessage)
-        {
-            Console.WriteLine(errorMessage);
-        }
-
+        /// <summary>
+        /// Controls the look of the output any string for unified color and easy update of color scheme
+        /// </summary>
+        /// <param name="outputString">string</param>
         public void ColorLineNoEnter(string outputString)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;

@@ -58,7 +58,7 @@ namespace assignment1
             catch (Exception e)
             {
                 UserInterface ui = new UserInterface();
-                ui.ErrorCapture (e.ToString() + " " + e.StackTrace);
+                ui.OutputAString (e.ToString() + " " + e.StackTrace);
             }
             
         }
@@ -90,7 +90,7 @@ namespace assignment1
             catch (Exception e)
             {
                 UserInterface ui = new UserInterface();
-                ui.ErrorCapture(e.ToString() + " " + e.StackTrace);
+                ui.OutputAString(e.ToString() + " " + e.StackTrace);
                 return null;
             }
 
@@ -137,7 +137,7 @@ namespace assignment1
             catch (Exception e)
             {
                 UserInterface ui = new UserInterface();
-                ui.ErrorCapture(e.ToString() + " " + e.StackTrace);
+                ui.OutputAString(e.ToString() + " " + e.StackTrace);
                 return null;
             }
         }
@@ -162,7 +162,7 @@ namespace assignment1
             catch (Exception e)
             {
                 UserInterface ui = new UserInterface();
-                ui.ErrorCapture(e.ToString() + " " + e.StackTrace);
+                ui.OutputAString(e.ToString() + " " + e.StackTrace);
                 return null;
             }
             
@@ -188,7 +188,7 @@ namespace assignment1
             catch (Exception e)
             {
                 UserInterface ui = new UserInterface();
-                ui.ErrorCapture(e.ToString() + " " + e.StackTrace);
+                ui.OutputAString(e.ToString() + " " + e.StackTrace);
                 return null;
             }
            
@@ -208,7 +208,7 @@ namespace assignment1
             catch (Exception e)
             {
                 UserInterface ui = new UserInterface();
-                ui.ErrorCapture(e.ToString() + " " + e.StackTrace);
+                ui.OutputAString(e.ToString() + " " + e.StackTrace);
                 return " ";
             }
             
@@ -333,7 +333,7 @@ namespace assignment1
             catch (Exception e)
             {
                 UserInterface ui = new UserInterface();
-                ui.ErrorCapture(e.ToString() + " " + e.StackTrace);
+                ui.OutputAString(e.ToString() + " " + e.StackTrace);
                 return null;
             }
             
@@ -390,7 +390,7 @@ namespace assignment1
             catch (Exception e)
             {
                 UserInterface ui = new UserInterface();
-                ui.ErrorCapture(e.ToString() + " " + e.StackTrace);
+                ui.OutputAString(e.ToString() + " " + e.StackTrace);
                 return false;
             }
            
