@@ -84,7 +84,7 @@ namespace assignment1
             switch (inputString)
             {
                 case "1":
-                    PrintOutput(wineCollection.CreateListString());
+                    PrintOutput(wineCollection.CreateListStringUnordered());
                 break;
                 case "2":
                     PrintOutput(wineCollection.CreateListStringOrderByName());

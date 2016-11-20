@@ -43,6 +43,7 @@ namespace assignment1
                 BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
                 //Create a new beverage
                 Beverage addBevarage = new Beverage();
+                //Assign values to addBeverage properties
                 addBevarage.id = id;
                 addBevarage.name = name;
                 addBevarage.pack = pack;
@@ -61,18 +62,23 @@ namespace assignment1
             
         }
 
-        public string[] CreateListString()
+        /// <summary>
+        /// Create a string array create from the data of the database
+        /// </summary>
+        /// <returns></returns>
+        public string[] CreateListStringUnordered()
         {
             try
             {
+                //Open the database
                 BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+                //Counter to be used for index of the string array
                 int count = 0;
-                foreach (Beverage beverage in beverageEntities.Beverages)
-                {
-                    count++;
-                }
-                string[] listString = new string[count];
-                count = 0;
+                //Create a string array the length of the number of beverages in the database
+                string[] listString = new string[beverageEntities.Beverages.Count()];
+                //For each bevarage in the database format the data from it into a printable sting
+                //to be added to the listString array. An array is used due to the fact that the
+                //amount of data to be output could be longer than a single string could hold.
                 foreach (Beverage beverage in beverageEntities.Beverages)
                 {
                     listString[count] = FormatBeverageSting(beverage);
@@ -89,24 +95,43 @@ namespace assignment1
 
         }
 
+        /// <summary>
+        /// Creates a list of formated strings for each beverage in a list of Beverages
+        /// </summary>
+        /// <param name="beverageList">List</Beverages>List</param>
+        /// <returns>string[]</returns>
+        public string[] CreateListString(List<Beverage> beverageList)
+        {
+            //Create an array the length of the beverageList
+            string[] tempString = new string[beverageList.Count];
+            int count = 0;
+            //For each bevarage in the database format the data from it into a printable sting
+            //to be added to the listString array. An array is used due to the fact that the
+            //amount of data to be output could be longer than a single string could hold.
+            foreach (Beverage beverage in beverageList)
+            {
+                tempString[count] = FormatBeverageSting(beverage);
+                count++;
+            }
+            return tempString;
+        }
+
+        /// <summary>
+        /// Create a list of beverages ordered by Name
+        /// </summary>
+        /// <returns>string[]</returns>
         public string[] CreateListStringOrderByName()
         {
             try
             {
+                //Open the database
                 BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+                //Create the list of beverages orderd by Name
                 List<Beverage> orderByName = (from bev in beverageEntities.Beverages
                                  orderby bev.name ascending
                                  select bev).ToList();
 
-                string[] tempString = new string[orderByName.Count];
-                int count = 0;
-                foreach (Beverage beverage in orderByName)
-                {
-                    tempString[count] = FormatBeverageSting(beverage);
-                    count++;
-                }
-
-                return tempString;
+                return CreateListString(orderByName);
             }
             catch (Exception e)
             {
@@ -114,27 +139,24 @@ namespace assignment1
                 ui.ErrorCapture(e.ToString() + " " + e.StackTrace);
                 return null;
             }
-            
         }
 
+        /// <summary>
+        /// Create a list of beverages ordered by Highest Price
+        /// </summary>
+        /// <returns>string[]</returns>
         public string[] CreateListStringOrderByHighestPrice()
         {
             try
             {
+                //Open the database
                 BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+                //Create the list of beverages orderd by Highest Price
                 List<Beverage> orderByHighestPrice = (from bev in beverageEntities.Beverages
                                               orderby bev.price descending
                                               select bev).ToList();
-
-                string[] tempString = new string[orderByHighestPrice.Count];
-                int count = 0;
-                foreach (Beverage beverage in orderByHighestPrice)
-                {
-                    tempString[count] = FormatBeverageSting(beverage);
-                    count++;
-                }
-
-                return tempString;
+                
+                return CreateListString(orderByHighestPrice);
             }
             catch (Exception e)
             {
@@ -145,24 +167,22 @@ namespace assignment1
             
         }
 
+        /// <summary>
+        ///  Create a list of beverages ordered by Lowest Price
+        /// </summary>
+        /// <returns></returns>
         public string[] CreateListStringOrderByLowestPrice()
         {
             try
             {
+                //Open the database
                 BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+                //Create the list of beverages orderd by lowest Price
                 List<Beverage> orderByLowestPrice = (from bev in beverageEntities.Beverages
                                                       orderby bev.price ascending
                                                       select bev).ToList();
 
-                string[] tempString = new string[orderByLowestPrice.Count];
-                int count = 0;
-                foreach (Beverage beverage in orderByLowestPrice)
-                {
-                    tempString[count] = FormatBeverageSting(beverage);
-                    count++;
-                }
-
-                return tempString;
+                return CreateListString(orderByLowestPrice);
             }
             catch (Exception e)
             {
@@ -173,7 +193,11 @@ namespace assignment1
            
         }
 
-
+        /// <summary>
+        /// Formats a single beverage into a string for output. Done once for reuse.
+        /// </summary>
+        /// <param name="beverage">Beverage</param>
+        /// <returns>string</returns>
         private string FormatBeverageSting (Beverage beverage)
         {
             try
@@ -189,16 +213,28 @@ namespace assignment1
             
         }
 
+        /// <summary>
+        /// Method to search any of the Bevarage properties for the data specified by the user 
+        /// and then delete those items if the user specifed deletion.
+        /// </summary>
+        /// <param name="searchFor">string</param>
+        /// <param name="propertyName">string</param>
+        /// <param name="delete">bool</param>
+        /// <returns>string</returns>
         public string SearchByAndPossiblyDelete(string searchFor, string propertyName, bool delete)
-        {//Method to search any of the Bevarage properties for the data specified by the user
-
+        {
             try
             {
+                //Open the database
                 BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
+                //Create an empty list to hold the Beverages
                 List<Beverage> queryBeverages = null;
 
+                //Bool of if anything is found in the search starts out as false
                 bool found = false;
+                //Create the string to hold the found list
                 string listString = "*************************************************************************************************" + Environment.NewLine;
+                //From the property name create a search to be done
                 switch (propertyName)
                     {
                     case nameof(Beverage.id):
@@ -218,6 +254,7 @@ namespace assignment1
                         break;
                     case nameof(Beverage.price):
                         decimal searchForDec = 0;
+                        //create a decimal value from the string value for the search
                         if (Decimal.TryParse(searchFor, out searchForDec))
                         {
                             queryBeverages = beveageEntities.Beverages.Where(
@@ -227,7 +264,7 @@ namespace assignment1
                         break;
                     case nameof(Beverage.active):
                         bool tempBool;
-                    
+                        //Create a bool value from the string value to be used for the search                 
                         if (searchFor == "True")
                         {
                             tempBool = true;
@@ -242,8 +279,11 @@ namespace assignment1
                         break;
                     }
 
+                //Find out if anything was found in the search
                 if (queryBeverages != null)
                 {
+                    //As something was found, return the formated beverage information for each beverage found
+                    //and make the found bool true.
                     foreach (Beverage beverage in queryBeverages)
                     {
                         listString += FormatBeverageSting(beverage) + Environment.NewLine;
@@ -252,28 +292,40 @@ namespace assignment1
                 }
                 if (!found)
                 {
+                    //As nothing was found return searched for term was not found.
                     listString += searchFor + " was not found." + Environment.NewLine;
                 }
                 else
                 {
-                    //When you want the deleted version of this method to be used.
+                    //if somthing was found and you want to delete the items ask to confirm than
+                    //delete the items.
                     if (delete)
                     {
+                        //Make an instance of UserInterface
                         UserInterface ui = new UserInterface();
+                        //Output to the user the list of items found
                         ui.OutputAString(listString);
+                        //Find out if the user is sure to delete the list of items found.
                         if (ui.AreYouSure())
                         {
-                            DelelteItem(queryBeverages);
-                            listString += Environment.NewLine + "The list was deleted" + Environment.NewLine; 
+                            //Call the method to delete the list an inform the user if it was deleted or not.
+                            if (DeleteItem(queryBeverages))
+                            {
+                                listString += Environment.NewLine + "The list was deleted" + Environment.NewLine; 
+                            }
+                            else
+                            {
+                                listString += Environment.NewLine + "The list was NOT deleted do to an error with the database!" + Environment.NewLine;
+                            }
+                           
                         }
                         else
                         {
+                            //As the user does not want to delete the items exit out and return a blank list.
                             listString = "";
                         }
-                }
+                    }
                 listString += "*************************************************************************************************" + Environment.NewLine;
-
-            
                 }
                 return listString;
             }
@@ -286,21 +338,32 @@ namespace assignment1
             
         }
 
-        public bool DelelteItem(List<Beverage> queryBeverages )
+        /// <summary>
+        /// Used to delete the list of bevarages found in the SearchByAndPossiblyDelete method
+        /// </summary>
+        /// <param name="queryBeverages"></param>
+        /// <returns>bool</returns>
+        public bool DeleteItem(List<Beverage> queryBeverages )
         {
             try
             {
+                //Bool to hold if the item(s) was successfully deleted of not
                 bool itemDeletedBool = false;
+                //Count used to find out how many times that the database did not correctly delete the beverage
                 int count = 0;
-                BeverageJMartinEntities beveageEntities = new BeverageJMartinEntities();
+                //Open the database
+                BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+                //Beverage to temporarily hold a beverage
                 Beverage tempBeverage = new Beverage(); 
+
                 foreach (Beverage beverage in queryBeverages)
                 {
-                    tempBeverage = beveageEntities.Beverages.Find(beverage.id);
-                    beveageEntities.Beverages.Remove(tempBeverage);
+                    //hold the current beverage in the list than delete if from the list
+                    tempBeverage = beverageEntities.Beverages.Find(beverage.id);
+                    beverageEntities.Beverages.Remove(tempBeverage);
 
                     //Check if the beverage just deleted is in the database 
-                    tempBeverage = beveageEntities.Beverages.Find(beverage.id);
+                    tempBeverage = beverageEntities.Beverages.Find(beverage.id);
                     //If the bevarage is still in the database add one to the count
                     if (tempBeverage == null)
                     {
@@ -311,7 +374,7 @@ namespace assignment1
                 if(count < 1)
                 {
                     //All items successfully added so save the changes
-                    beveageEntities.SaveChanges();
+                    beverageEntities.SaveChanges();
                     itemDeletedBool = true;
                 }
                 else
