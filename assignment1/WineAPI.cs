@@ -1,6 +1,7 @@
 ﻿/* Jeffrey Martin
-   CIS237 Advanced C3
-   9-20-20196
+   CIS237 Advanced C#
+   Assignment # 5
+   11-22-2016
 */
 using System;
 using System.Collections.Generic;

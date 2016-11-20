@@ -1,6 +1,7 @@
 ﻿/* Jeffrey Martin
-   CIS237 Advanced C3
-   9-20-20196
+   CIS237 Advanced C#
+   Assignment # 5
+   11-22-2016
 */
 
 using System;
@@ -20,28 +21,33 @@ namespace assignment1
             //Class Variables
             //****************************
 
+            //Create an instance of the WineAPI for use in program
             WineAPI wineItemCollection = new WineAPI();
 
-            UserInterface ui = new UserInterface();//Instance of the UserInterface class to run the menus'
+            //Instance of the UserInterface class to run the menus'
+            UserInterface ui = new UserInterface();
 
+            //Start the User Interface and initialize it
             ui.StartUserInterface();
 
+            //Start the main menu and wit for user input
             int choice = ui.GetUserInputMainMenu();
 
+            //As long as the user does not choose 5 for exiting loop through the main menu
             while (choice != 5)
             {
                 switch (choice)
                 {
-                    case 1:
+                    case 1://Go to the Print Wine List Menu in the User Interface
                         ui.GetUserInputPrintWineListMenu(wineItemCollection);
                         break;
-                    case 2:
+                    case 2://Go to the method SearchForWineAndPossiblyDelete and choose search only
                         SearchForWineAndPossiblyDelete(wineItemCollection, false);
                         break;
-                    case 3:
+                    case 3://Go to the method in the User Interface to add a wine item
                         ui.AddWine(wineItemCollection);
                         break;
-                    case 4:
+                    case 4://Go to the method SearchForWineAndPossiblyDelete and choose search and delete
                         SearchForWineAndPossiblyDelete(wineItemCollection, true);
                     break;
                 }
@@ -49,12 +55,22 @@ namespace assignment1
             }
         }
    
+        /// <summary>
+        /// Method used to find out the choice of property the user wants to find or delete
+        /// </summary>
+        /// <param name="WineCollection">WineAPI</param>
+        /// <param name="delete">bool</param>
         static void SearchForWineAndPossiblyDelete(WineAPI WineCollection, bool delete)
         {
+            //Create an instance of the User Interface
             UserInterface ui = new UserInterface();
+            //Output the Search or Delete Menu and wait for users choice
             int choice = ui.GetUserInputSearchMenu(delete);
+            //Repeat until the user chooses 6 to exit
             while (choice != 6)
             {
+                //Using the choice input by the user, get the input of the property type 
+                //needed from the user.
                 switch (choice)
                 {
                     case 1:
