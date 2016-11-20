@@ -24,7 +24,7 @@ namespace assignment1
 
             UserInterface ui = new UserInterface();//Instance of the UserInterface class to run the menus'
 
-            ui.StartUserInterface();            
+            ui.StartUserInterface();
 
             int choice = ui.GetUserInputMainMenu();
 
@@ -34,7 +34,6 @@ namespace assignment1
                 {
                     case 1:
                         ui.GetUserInputPrintWineListMenu(wineItemCollection);
-                        //ui.PrintOutput(wineItemCollection.CreateListString());
                         break;
                     case 2:
                         SearchForWineAndPossiblyDelete(wineItemCollection, false);

@@ -80,6 +80,7 @@ namespace assignment1
                 inputString = inputChar.KeyChar.ToString();
                 Console.WriteLine();
             }
+            Console.WriteLine("Connecting to database, this may take a while.");
             switch (inputString)
             {
                 case "1":
@@ -161,7 +162,7 @@ namespace assignment1
             }
             else
             {
-                Console.Write($"Enter {propertyName}: ");
+                ColorLineNoEnter($"Enter {propertyName}: ");
                 input = Console.ReadLine();
             }
             
@@ -181,7 +182,7 @@ namespace assignment1
         /// <param name="WineCollection">WineItem[]</param>
         public void AddWine(WineAPI WineCollection)
         {
-            Console.Write("Enter Wine ID: ");
+            ColorLineNoEnter("Enter Wine ID: ");
             string idInput = Console.ReadLine();
             if (idInput == "")
             {
@@ -193,32 +194,31 @@ namespace assignment1
                 string seachString = WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false);
                 if (seachString.Contains("was not found"))
                 {
-                    Console.Write("Enter Wine Description: ");
+                    ColorLineNoEnter("Enter Wine Name: ");
                     string descriptionInput = Console.ReadLine();
                     while (descriptionInput == "")
                     {
-                        Console.WriteLine(WriteInvalidSpecificEntry("Wine Description"));
-                        Console.Write("Enter Wine Description: ");
+                        Console.WriteLine(WriteInvalidSpecificEntry("Wine Name"));
+                        ColorLineNoEnter("Enter Wine Name: ");
                         descriptionInput = Console.ReadLine();
                     }
 
-
-                    Console.Write("Enter Wine Pack: ");
+                    ColorLineNoEnter("Enter Wine Pack: ");
                     string packInput = Console.ReadLine();
                     while (packInput == "")
                     {
                         Console.WriteLine(WriteInvalidSpecificEntry("Wine Pack"));
-                        Console.Write("Enter Wine Pack: ");
+                        ColorLineNoEnter("Enter Wine Pack: ");
                         packInput = Console.ReadLine();
                     }
 
                     decimal priceInputDec;
-                    Console.Write("Enter Price: ");
+                    ColorLineNoEnter("Enter Price: ");
                     string priceInput = Console.ReadLine();
                     while (priceInput == "" || !(Decimal.TryParse(priceInput, out priceInputDec)))
                     {
                         Console.WriteLine("Invalid Wine Price");
-                        Console.Write("Enter Price: ");
+                        ColorLineNoEnter("Enter Price: ");
                         priceInput = Console.ReadLine();
                     }
 
@@ -279,11 +279,10 @@ namespace assignment1
         /// <returns>ConsoleKeyInfo</returns>
         public string GetBoolInput(string YesNoQuestion)
         {
-            Console.WriteLine();
-            Console.WriteLine($"{YesNoQuestion}?");
-            Console.WriteLine("Enter Yes or No.");
+            string outputString = $"{YesNoQuestion}?" + Environment.NewLine;
+            outputString+= "Enter Yes or No: ";
+            ColorLineNoEnter(outputString);
             string tempStringInfo = Console.ReadLine();
-            Console.WriteLine();
             return tempStringInfo;
         }
 
@@ -340,32 +339,30 @@ namespace assignment1
         /// </summary>
         private void PrintMainMenu()
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine();
-            Console.WriteLine("#############-Main Menu-#############");
-            Console.WriteLine("1) Print Wine List");
-            Console.WriteLine("2) Search for Wine");
-            Console.WriteLine("3) Add a new Wine");
-            Console.WriteLine("4) Delete a Wine");
-            Console.WriteLine("5) Exit the program");
-            Console.WriteLine("#############-Main Menu-#############");
-            Console.Write("Press the number of the menu item: ");
-            Console.ForegroundColor = ConsoleColor.White;
+            string outputString = Environment.NewLine;
+            outputString += "#############-Main Menu-#############" + Environment.NewLine;
+            outputString += "1) Print Wine List" + Environment.NewLine;
+            outputString += "2) Search for Wine" + Environment.NewLine;
+            outputString += "3) Add a new Wine" + Environment.NewLine;
+            outputString += "4) Delete a Wine" + Environment.NewLine;
+            outputString += "5) Exit the program" + Environment.NewLine;
+            outputString += "#############-Main Menu-#############" + Environment.NewLine;
+            outputString += "Press the number of the menu item: ";
+            ColorLineNoEnter(outputString);
         }
 
         private void PrintWineListMenu()
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine();
-            Console.WriteLine("#############-Print Wine List Menu-#############");
-            Console.WriteLine("1) Print Wine List Unorderd");
-            Console.WriteLine("2) Print Wine List by Name");
-            Console.WriteLine("3) Print Wine List by Highest Price");
-            Console.WriteLine("4) Print Wine List by Lowest Price");
-            Console.WriteLine("5) Exit the program");
-            Console.WriteLine("#############-Main Menu-#############");
-            Console.Write("Press the number of the menu item: ");
-            Console.ForegroundColor = ConsoleColor.White;
+            string outputString = Environment.NewLine;
+            outputString += "#############-Print Wine List Menu-#############" + Environment.NewLine;
+            outputString += "1) Print Wine List Unorderd" + Environment.NewLine;
+            outputString += "2) Print Wine List by Name" + Environment.NewLine;
+            outputString += "3) Print Wine List by Highest Price" + Environment.NewLine;
+            outputString += "4) Print Wine List by Lowest Price" + Environment.NewLine;
+            outputString += "5) Exit the Print Wine List" + Environment.NewLine;
+            outputString += "#############-Print Wine List Menu-#############" + Environment.NewLine;
+            outputString += "Press the number of the menu item: ";
+            ColorLineNoEnter(outputString);
         }
 
         /// <summary>
@@ -382,24 +379,17 @@ namespace assignment1
             {
                 searchDelete = "Search";
             }
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine();
-            Console.WriteLine($"############-{searchDelete} Menu-############");
-            Console.WriteLine($"1) {searchDelete} by ID");
-            Console.WriteLine($"2) {searchDelete} by Discription");
-            Console.WriteLine($"3) {searchDelete} by Pack");
-            Console.WriteLine($"4) {searchDelete} by Price");
-            Console.WriteLine($"5) {searchDelete} by Active");
-
-            Console.WriteLine("6) Return to Main Menu");
-            Console.WriteLine($"############-{searchDelete} Menu-############");
-            Console.Write($"Press the number of the menu item: ");
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
-                public void PrintFileLoadedMessage()
-        {
-            Console.WriteLine("********Wines have been loaded********");
+            string outputString = Environment.NewLine;
+            outputString += $"############-{searchDelete} Menu-############" + Environment.NewLine;
+            outputString += $"1) {searchDelete} by ID" + Environment.NewLine;
+            outputString += $"2) {searchDelete} by Name" + Environment.NewLine;
+            outputString += $"3) {searchDelete} by Pack" + Environment.NewLine;
+            outputString += $"4) {searchDelete} by Price" + Environment.NewLine;
+            outputString += $"5) {searchDelete} by Active" + Environment.NewLine;
+            outputString += "6) Return to Main Menu" + Environment.NewLine;
+            outputString += $"############-{searchDelete} Menu-############" + Environment.NewLine;
+            outputString += $"Press the number of the menu item: ";
+            ColorLineNoEnter(outputString);
         }
 
         public bool AreYouSure()
@@ -420,6 +410,13 @@ namespace assignment1
         public void ErrorCapture(string errorMessage)
         {
             Console.WriteLine(errorMessage);
+        }
+
+        public void ColorLineNoEnter(string outputString)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write(outputString);
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }
