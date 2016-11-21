@@ -54,16 +54,12 @@ namespace assignment1
         public int GetUserInputMainMenu()
         {
             this.PrintMainMenu();
-            ConsoleKeyInfo inputChar = Console.ReadKey();
-            string inputString = inputChar.KeyChar.ToString();
-            Console.WriteLine();
+            string inputString = InputCharReturnString();
             while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5" && inputString != "6")
             {
                 Console.WriteLine(WriteInvalidEntry());
                 this.PrintMainMenu();
-                inputChar = Console.ReadKey();
-                inputString = inputChar.KeyChar.ToString();
-                Console.WriteLine();
+                inputString = InputCharReturnString();
             }
             return Int16.Parse(inputString);
         }
@@ -75,16 +71,12 @@ namespace assignment1
         public void GetUserInputPrintWineListMenu(WineAPI wineCollection)
         {
             this.PrintWineListMenu();
-            ConsoleKeyInfo inputChar = Console.ReadKey();
-            string inputString = inputChar.KeyChar.ToString();
-            Console.WriteLine();
+            string inputString = InputCharReturnString();
             while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
             {
                 Console.WriteLine(WriteInvalidEntry());
                 this.PrintWineListMenu();
-                inputChar = Console.ReadKey();
-                inputString = inputChar.KeyChar.ToString();
-                Console.WriteLine();
+                inputString = InputCharReturnString();
             }
             Console.WriteLine("Connecting to database, this may take a while.");
 
@@ -114,16 +106,12 @@ namespace assignment1
         {
             this.PrintSearchMenu(delete);
 
-            ConsoleKeyInfo inputChar = Console.ReadKey();
-            string inputString = inputChar.KeyChar.ToString();
-            Console.WriteLine();
+            string inputString = InputCharReturnString();
             while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5" && inputString != "6")
             {
                 Console.WriteLine(WriteInvalidEntry());
                 this.PrintSearchMenu(delete);
-                inputChar = Console.ReadKey();
-                inputString = inputChar.KeyChar.ToString();
-                Console.WriteLine();
+                inputString = InputCharReturnString();
             }
             return Int16.Parse(inputString);
         }
@@ -189,64 +177,34 @@ namespace assignment1
         /// <param name="WineCollection">WineItem[]</param>
         public void AddWine(WineAPI WineCollection)
         {
-            ColorLineNoEnter("Enter Wine ID: ");
-            //Get the ID input
-            string idInput = Console.ReadLine();
-            if (idInput == "")
+            string idInput = GetId();
+            //Check if the id the user input is all ready in the database
+            string seachString = WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false);
+            if (seachString.Contains("was not found"))
             {
-                Console.WriteLine(WriteInvalidSpecificEntry("Wine Id"));
+                //Get the Name of the wine
+                string descriptionInput = GetTheNameOfTheWine();
+                    
+                //Get the Wine pack
+                string packInput = GetTheWinePack();
 
+                //Get the price
+                decimal priceInputDec = GetThePrice();
+                   
+                //Get if the wine is active
+                bool wineActive = BoolInput("Is this wine active");                    
+                    
+                //Now that all the input has been recieved by the user call the method to add the wine
+                WineCollection.AddNewItem(idInput, descriptionInput, packInput, priceInputDec, wineActive);
+                    
+                //Output the wine that has been added
+                Console.WriteLine(WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false));
             }
             else
-            {   //Check if the id the user input is all ready in the database
-                string seachString = WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false);
-                if (seachString.Contains("was not found"))
-                {
-                    //Get the Name of the wine
-                    ColorLineNoEnter("Enter Wine Name: ");
-                    string descriptionInput = Console.ReadLine();
-                    while (descriptionInput == "")
-                    {
-                        Console.WriteLine(WriteInvalidSpecificEntry("Wine Name"));
-                        ColorLineNoEnter("Enter Wine Name: ");
-                        descriptionInput = Console.ReadLine();
-                    }
-
-                    //Get the Wine pack
-                    ColorLineNoEnter("Enter Wine Pack: ");
-                    string packInput = Console.ReadLine();
-                    while (packInput == "")
-                    {
-                        Console.WriteLine(WriteInvalidSpecificEntry("Wine Pack"));
-                        ColorLineNoEnter("Enter Wine Pack: ");
-                        packInput = Console.ReadLine();
-                    }
-
-                    //Get the price
-                    decimal priceInputDec;
-                    ColorLineNoEnter("Enter Price: ");
-                    string priceInput = Console.ReadLine();
-                    while (priceInput == "" || !(Decimal.TryParse(priceInput, out priceInputDec)))
-                    {
-                        Console.WriteLine("Invalid Wine Price");
-                        ColorLineNoEnter("Enter Price: ");
-                        priceInput = Console.ReadLine();
-                    }
-
-                    //Get if the wine is active
-                    bool wineActive = BoolInput("Is this wine active");                    
-                    
-                    //Now that all the input has been recieved by the user call the method to add the wine
-                    WineCollection.AddNewItem(idInput, descriptionInput, packInput, priceInputDec, wineActive);
-                    
-                    //Output the wine that has been added
-                    Console.WriteLine(WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false));
-                }
-                else
-                {
-                    Console.WriteLine(idInput + " is allready used as an ID. Each ID must be unique.");
-                }
+            {
+                Console.WriteLine(idInput + " is allready used as an ID. Each ID must be unique.");
             }
+            
         }
 
         /// <summary>
@@ -282,7 +240,7 @@ namespace assignment1
         /// Generic method to print out the YesNoQuestion and get the users response
         /// </summary>
         /// <param name="YesNoQuestion"></param>
-        /// <returns>ConsoleKeyInfo</returns>
+        /// <returns>string</returns>
         public string GetBoolInput(string YesNoQuestion)
         {
             string outputString = $"{YesNoQuestion}?" + Environment.NewLine;
@@ -446,27 +404,34 @@ namespace assignment1
 
         public void GetUserInputToUpdateAWine(WineAPI WineCollection)
         {
-            ColorLineNoEnter("Enter Wine ID you wish to edit: ");
-            //Get the ID input
-            string idInput = Console.ReadLine();
-            if (idInput == "")
+            string idInput = GetId();
+            //Check if the id the user input is all ready in the database
+            string seachString = WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false);
+            if (seachString.Contains("was not found"))
             {
-                Console.WriteLine(WriteInvalidSpecificEntry("Wine Id"));
-
+                Console.WriteLine(idInput + " Id was not found so can not be edited.");
             }
             else
-            {   //Check if the id the user input is all ready in the database
-                string seachString = WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false);
-                if (seachString.Contains("was not found"))
-                {
-                    Console.WriteLine(idInput + " Id was not found so can not be edited.");
-                }
-                else
-                {
-                    WineCollection.UpdateWine(idInput);
-                }
+            {
+                WineCollection.UpdateWine(idInput);
             }
+            
         }
+        
+        public string GetId()
+        {   
+            //Get the ID input
+            ColorLineNoEnter("Enter Wine ID : ");
+            string idInput = Console.ReadLine();
+            while (idInput == "")
+            {
+                Console.WriteLine(WriteInvalidSpecificEntry("Wine Id"));
+                ColorLineNoEnter("Enter Wine ID : ");
+                idInput = Console.ReadLine();
+            }
+            return idInput;    
+        }
+
         public string GetTheNameOfTheWine()
         {
             //Get the Name of the wine
