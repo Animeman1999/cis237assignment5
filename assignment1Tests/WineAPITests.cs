@@ -1,10 +1,17 @@
-﻿using NUnit.Framework;
+﻿/* Jeffrey Martin
+   CIS237 Advanced C#
+   Assignment # 5
+   11-22-2016
+*/
+
+using NUnit.Framework;
 using assignment1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace assignment1.Tests
 {
@@ -228,7 +235,15 @@ namespace assignment1.Tests
         [Test()]
         public void UpdateWineTest()
         {
+            StringBuilder actualOutput = replaceConsole();
             Assert.Fail();
+        }
+        private static StringBuilder replaceConsole()
+        {
+            StringBuilder actualOutput = new StringBuilder();
+            StringWriter sw = new StringWriter(actualOutput);
+            Console.SetOut(sw);
+            return actualOutput;
         }
     }
 }

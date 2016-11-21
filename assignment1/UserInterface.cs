@@ -317,7 +317,7 @@ namespace assignment1
             outputString += "5) Update a wine in the list" + Environment.NewLine;
             outputString += "6) Exit the program" + Environment.NewLine;
             outputString += "#############-Main Menu-#############" + Environment.NewLine;
-            outputString += "Press the number of the menu item: ";
+            outputString += "Enter the number of the menu item: ";
             ColorLineNoEnter(outputString);
         }
 
@@ -334,7 +334,7 @@ namespace assignment1
             outputString += "4) Print Wine List by Lowest Price" + Environment.NewLine;
             outputString += "5) Exit the Print Wine List" + Environment.NewLine;
             outputString += "#############-Print Wine List Menu-#############" + Environment.NewLine;
-            outputString += "Press the number of the menu item: ";
+            outputString += "Enter the number of the menu item: ";
             ColorLineNoEnter(outputString);
         }
 
@@ -361,7 +361,7 @@ namespace assignment1
             outputString += $"5) {searchDelete} by Active" + Environment.NewLine;
             outputString += "6) Return to Main Menu" + Environment.NewLine;
             outputString += $"############-{searchDelete} Menu-############" + Environment.NewLine;
-            outputString += $"Press the number of the menu item: ";
+            outputString += $"Enter the number of the menu item: ";
             ColorLineNoEnter(outputString);
         }
 
@@ -506,13 +506,14 @@ namespace assignment1
         /// <summary>
         /// Takes a single char and converts it into a string
         /// </summary>
-        /// <returns></returns>
+        /// <returns>string</returns>
         public string InputCharReturnString()
         {
-            ConsoleKeyInfo inputChar = Console.ReadKey();
-            string inputString = inputChar.KeyChar.ToString();
-            Console.WriteLine();
-            return inputString;
+            //ConsoleKeyInfo inputChar = Console.ReadKey();
+            //string inputString = inputChar.KeyChar.ToString();
+            //Console.WriteLine();
+            //return inputString;
+            return Console.ReadLine();
         }
 
         /// <summary>
@@ -530,7 +531,7 @@ namespace assignment1
             outputString += $"4) Edit by Active" + Environment.NewLine;
             outputString += "5) Return to Main Menu" + Environment.NewLine;
             outputString += $"############-Edit for wine ID {wineId} Menu-############" + Environment.NewLine;
-            outputString += $"Press the number of the menu item: ";
+            outputString += $"Enter the number of the menu item: ";
             return outputString;
         }
 

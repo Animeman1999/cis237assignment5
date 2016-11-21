@@ -103,6 +103,7 @@
     <None Include="Beverage.edmx.diagram">
       <DependentUpon>Beverage.edmx</DependentUpon>
     </None>
+    <None Include="MakeTest.bat" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
