@@ -395,45 +395,69 @@ namespace assignment1
             }
         }
 
+        /// <summary>
+        /// Updates a single wine
+        /// </summary>
+        /// <param name="id">string</param>
         public void UpdateWine(string id)
         {
-            BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
-            UserInterface ui = new UserInterface();
-            Beverage beverageToUpdate = beverageEntities.Beverages.Find(id);
-            
-            string inputString = " ";
-            while (inputString != "5")
+            try
             {
-                ui.PrintLine();
-                ui.ColorLineNoEnter(FormatBeverageSting(beverageToUpdate));
-                ui.PrintLine();
-                ui.ColorLineNoEnter(ui.PrintEditMenu(id));
-                inputString = ui.InputCharReturnString();
-                while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
+                //Open database
+                BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+                //Create an instance of the UserInterface
+                UserInterface ui = new UserInterface();
+                //Create a beverage that will hold the one to be updated by the id passed in
+                Beverage beverageToUpdate = beverageEntities.Beverages.Find(id);
+            
+                string inputString = " ";
+                //Continue to loop until the user choose 5 to save and exit.
+                while (inputString != "5")
                 {
-                    ui.ColorLineNoEnter(ui.WriteInvalidEntry());
+                    //Output the beveragtToUpdate to the user
+                    ui.PrintLine();
                     ui.ColorLineNoEnter(FormatBeverageSting(beverageToUpdate));
+                    ui.PrintLine();
+                    //Ouput the Edit Menu
                     ui.ColorLineNoEnter(ui.PrintEditMenu(id));
+                    //Get the users choice of which menu item to do
                     inputString = ui.InputCharReturnString();
+                    //Loop until valid input from the user
+                    while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
+                    {
+                        ui.ColorLineNoEnter(ui.WriteInvalidEntry());
+                        ui.ColorLineNoEnter(FormatBeverageSting(beverageToUpdate));
+                        ui.ColorLineNoEnter(ui.PrintEditMenu(id));
+                        inputString = ui.InputCharReturnString();
+                    }
+                    //Ouput a blank line
+                    ui.OutputAString(" ");
+                    //Get the information needed from the user to update the property of the 
+                    //property type the user just chose.
+                    switch (inputString)
+                    {
+                        case "1":
+                            beverageToUpdate.name = ui.GetTheNameOfTheWine();
+                            break;
+                        case "2":
+                            beverageToUpdate.pack = ui.GetTheWinePack();
+                            break;
+                        case "3":
+                            beverageToUpdate.price = ui.GetThePrice();
+                            break;
+                        case "4":
+                            beverageToUpdate.active = ui.GetIfWineIsActive();
+                            break;
+                    }
                 }
-                Console.WriteLine();
-                switch (inputString)
-                {
-                    case "1":
-                        beverageToUpdate.name = ui.GetTheNameOfTheWine();
-                        break;
-                    case "2":
-                        beverageToUpdate.pack = ui.GetTheWinePack();
-                        break;
-                    case "3":
-                        beverageToUpdate.price = ui.GetThePrice();
-                        break;
-                    case "4":
-                        beverageToUpdate.active = ui.GetIfWineIsActive();
-                        break;
-                }
+                //Save the changes to the database
+                beverageEntities.SaveChanges();
             }
-            beverageEntities.SaveChanges();
+            catch (Exception e)
+            {
+                UserInterface ui = new UserInterface();
+                ui.OutputAString(e.ToString() + " " + e.StackTrace);
+            }
         }
     }
 }
