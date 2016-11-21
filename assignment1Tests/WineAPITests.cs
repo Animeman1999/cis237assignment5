@@ -236,7 +236,33 @@ namespace assignment1.Tests
         public void UpdateWineTest()
         {
             StringBuilder actualOutput = replaceConsole();
-            Assert.Fail();
+
+            BeverageJMartinEntities BevEntitites = new BeverageJMartinEntities();
+            WineAPI testWineAPI = new WineAPI();
+            bool active = true;
+            string id = "VVVVV";
+            string name = "white winie";
+            string pack = "54 ml";
+            Decimal price = 12.12M;
+            testWineAPI.AddNewItem(id, name, pack, price, active);
+
+            string inputString = StringRead("1{0}Red winie{0}2{0}53 ml{0}3{0}11.11{0}4{0}n{0}5{0}6{0}");
+
+            testWineAPI.UpdateWine(id);
+
+            Beverage changedBeverage = BevEntitites.Beverages.Find(id);
+            string nameActual = changedBeverage.name;
+            string packActual = changedBeverage.pack;
+            decimal priceActual = changedBeverage.price;
+            bool activeActual = changedBeverage.active;
+
+            BevEntitites.Beverages.Remove(changedBeverage);
+            BevEntitites.SaveChanges();
+
+            Assert.AreEqual("Red winie", nameActual.Trim());
+            Assert.AreEqual("53 ml", packActual.Trim());
+            Assert.AreEqual(11.11, priceActual);
+            Assert.IsFalse(activeActual);
         }
         private static StringBuilder replaceConsole()
         {
@@ -245,5 +271,12 @@ namespace assignment1.Tests
             Console.SetOut(sw);
             return actualOutput;
         }
+        private static string StringRead(string inputString)
+        {
+            StringReader sr = new StringReader(string.Format(inputString, Environment.NewLine));
+            Console.SetIn(sr);
+            return inputString;
+        }
+
     }
 }
