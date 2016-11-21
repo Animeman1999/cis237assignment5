@@ -402,6 +402,11 @@ namespace assignment1
             Console.ForegroundColor = ConsoleColor.White;
         }
 
+        /// <summary>
+        /// Get id from user of wine to update and launches UpdateWine in the WineAPI using the ID
+        /// from the user.
+        /// </summary>
+        /// <param name="WineCollection">WineAPI</param>
         public void GetUserInputToUpdateAWine(WineAPI WineCollection)
         {
             string idInput = GetId();
@@ -413,14 +418,18 @@ namespace assignment1
             }
             else
             {
+                //As the id was found to be used in the database launch the UpdateWine
                 WineCollection.UpdateWine(idInput);
             }
             
         }
         
+        /// <summary>
+        /// Get the ID input from the user
+        /// </summary>
+        /// <returns>string</returns>
         public string GetId()
         {   
-            //Get the ID input
             ColorLineNoEnter("Enter Wine ID : ");
             string idInput = Console.ReadLine();
             while (idInput == "")
@@ -432,9 +441,12 @@ namespace assignment1
             return idInput;    
         }
 
+        /// <summary>
+        /// Get the Name of the wine from the user
+        /// </summary>
+        /// <returns>string</returns>
         public string GetTheNameOfTheWine()
         {
-            //Get the Name of the wine
             ColorLineNoEnter("Enter Wine Name: ");
             string descriptionInput = Console.ReadLine();
             while (descriptionInput == "")
@@ -446,9 +458,12 @@ namespace assignment1
             return descriptionInput;
         }
 
+        /// <summary>
+        /// Get the Wine pack from the user
+        /// </summary>
+        /// <returns>string</returns>
         public string GetTheWinePack()
         {
-            //Get the Wine pack
             ColorLineNoEnter("Enter Wine Pack: ");
             string packInput = Console.ReadLine();
             while (packInput == "")
@@ -460,9 +475,12 @@ namespace assignment1
             return packInput;
         }
 
+        /// <summary>
+        /// Get the price from the user
+        /// </summary>
+        /// <returns>Decimal</returns>
         public Decimal GetThePrice()
         {
-            //Get the price
             decimal priceInputDec;
             ColorLineNoEnter("Enter Price: ");
             string priceInput = Console.ReadLine();
@@ -475,13 +493,20 @@ namespace assignment1
             return priceInputDec;
         }
 
+        /// <summary>
+        /// Get user input if the wine is active
+        /// </summary>
+        /// <returns>bool</returns>
         public bool GetIfWineIsActive()
         {
-            //Get if the wine is active
             bool wineActive = BoolInput("Is this wine active");
             return wineActive;
         }
 
+        /// <summary>
+        /// Takes a single char and converts it into a string
+        /// </summary>
+        /// <returns></returns>
         public string InputCharReturnString()
         {
             ConsoleKeyInfo inputChar = Console.ReadKey();
@@ -490,6 +515,11 @@ namespace assignment1
             return inputString;
         }
 
+        /// <summary>
+        /// Creates the Edit Menu as a string
+        /// </summary>
+        /// <param name="wineId">string</param>
+        /// <returns>string</returns>
         public string PrintEditMenu(string wineId)
         {
             string outputString = Environment.NewLine;
@@ -504,6 +534,9 @@ namespace assignment1
             return outputString;
         }
 
+        /// <summary>
+        /// Outputs a single line of dashes
+        /// </summary>
         public void PrintLine()
         {
             Console.WriteLine(Environment.NewLine + "-----------------------------------------------------------------------------------------------");
