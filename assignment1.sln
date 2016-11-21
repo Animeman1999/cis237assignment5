@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "assignment1", "assignment1\assignment1.csproj", "{70225A93-55F0-46EB-B794-C349E0C16A68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "assignment1Tests", "assignment1Tests\assignment1Tests.csproj", "{65517A3E-2FBC-4321-A91D-B052D3025E70}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{0BADC389-4D3C-4CAD-96C4-7699F0725BA8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Testing Metrics", "Unit Testing Metrics", "{DA31498B-646C-4AAA-B3D7-1AEABCAE70D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +21,15 @@ Global
 		{70225A93-55F0-46EB-B794-C349E0C16A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70225A93-55F0-46EB-B794-C349E0C16A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70225A93-55F0-46EB-B794-C349E0C16A68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65517A3E-2FBC-4321-A91D-B052D3025E70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65517A3E-2FBC-4321-A91D-B052D3025E70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65517A3E-2FBC-4321-A91D-B052D3025E70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65517A3E-2FBC-4321-A91D-B052D3025E70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DA31498B-646C-4AAA-B3D7-1AEABCAE70D9} = {0BADC389-4D3C-4CAD-96C4-7699F0725BA8}
 	EndGlobalSection
 EndGlobal
