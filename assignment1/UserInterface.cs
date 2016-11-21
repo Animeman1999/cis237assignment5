@@ -57,7 +57,7 @@ namespace assignment1
             ConsoleKeyInfo inputChar = Console.ReadKey();
             string inputString = inputChar.KeyChar.ToString();
             Console.WriteLine();
-            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
+            while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5" && inputString != "6")
             {
                 Console.WriteLine(WriteInvalidEntry());
                 this.PrintMainMenu();
@@ -133,7 +133,7 @@ namespace assignment1
         /// Generic invalid entry error message
         /// </summary>
         /// <returns>string</returns>
-        private string WriteInvalidEntry()
+        public string WriteInvalidEntry()
         {
             string invalidEntry;
             invalidEntry = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + Environment.NewLine +
@@ -356,7 +356,8 @@ namespace assignment1
             outputString += "2) Search for Wine" + Environment.NewLine;
             outputString += "3) Add a new Wine" + Environment.NewLine;
             outputString += "4) Delete a Wine" + Environment.NewLine;
-            outputString += "5) Exit the program" + Environment.NewLine;
+            outputString += "5) Update a wine in the list" + Environment.NewLine;
+            outputString += "6) Exit the program" + Environment.NewLine;
             outputString += "#############-Main Menu-#############" + Environment.NewLine;
             outputString += "Press the number of the menu item: ";
             ColorLineNoEnter(outputString);
@@ -441,6 +442,106 @@ namespace assignment1
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write(outputString);
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public void GetUserInputToUpdateAWine(WineAPI WineCollection)
+        {
+            ColorLineNoEnter("Enter Wine ID you wish to edit: ");
+            //Get the ID input
+            string idInput = Console.ReadLine();
+            if (idInput == "")
+            {
+                Console.WriteLine(WriteInvalidSpecificEntry("Wine Id"));
+
+            }
+            else
+            {   //Check if the id the user input is all ready in the database
+                string seachString = WineCollection.SearchByAndPossiblyDelete(idInput, nameof(Beverage.id), false);
+                if (seachString.Contains("was not found"))
+                {
+                    Console.WriteLine(idInput + " Id was not found so can not be edited.");
+                }
+                else
+                {
+                    WineCollection.UpdateWine(idInput);
+                }
+            }
+        }
+        public string GetTheNameOfTheWine()
+        {
+            //Get the Name of the wine
+            ColorLineNoEnter("Enter Wine Name: ");
+            string descriptionInput = Console.ReadLine();
+            while (descriptionInput == "")
+            {
+                Console.WriteLine(WriteInvalidSpecificEntry("Wine Name"));
+                ColorLineNoEnter("Enter Wine Name: ");
+                descriptionInput = Console.ReadLine();
+            }
+            return descriptionInput;
+        }
+
+        public string GetTheWinePack()
+        {
+            //Get the Wine pack
+            ColorLineNoEnter("Enter Wine Pack: ");
+            string packInput = Console.ReadLine();
+            while (packInput == "")
+            {
+                Console.WriteLine(WriteInvalidSpecificEntry("Wine Pack"));
+                ColorLineNoEnter("Enter Wine Pack: ");
+                packInput = Console.ReadLine();
+            }
+            return packInput;
+        }
+
+        public Decimal GetThePrice()
+        {
+            //Get the price
+            decimal priceInputDec;
+            ColorLineNoEnter("Enter Price: ");
+            string priceInput = Console.ReadLine();
+            while (priceInput == "" || !(Decimal.TryParse(priceInput, out priceInputDec)))
+            {
+                Console.WriteLine("Invalid Wine Price");
+                ColorLineNoEnter("Enter Price: ");
+                priceInput = Console.ReadLine();
+            }
+            return priceInputDec;
+        }
+
+        public bool GetIfWineIsActive()
+        {
+            //Get if the wine is active
+            bool wineActive = BoolInput("Is this wine active");
+            return wineActive;
+        }
+
+        public string InputCharReturnString()
+        {
+            ConsoleKeyInfo inputChar = Console.ReadKey();
+            string inputString = inputChar.KeyChar.ToString();
+            Console.WriteLine();
+            return inputString;
+        }
+
+        public string PrintEditMenu(string wineId)
+        {
+            string outputString = Environment.NewLine;
+            outputString += $"############-Edit for wine ID {wineId} Menu-############" + Environment.NewLine;
+            outputString += $"1) Edit by Name" + Environment.NewLine;
+            outputString += $"2) Edit by Pack" + Environment.NewLine;
+            outputString += $"3) Edit by Price" + Environment.NewLine;
+            outputString += $"4) Edit by Active" + Environment.NewLine;
+            outputString += "5) Return to Main Menu" + Environment.NewLine;
+            outputString += $"############-Edit for wine ID {wineId} Menu-############" + Environment.NewLine;
+            outputString += $"Press the number of the menu item: ";
+            return outputString;
+        }
+
+        public void PrintLine()
+        {
+            Console.WriteLine(Environment.NewLine + "-----------------------------------------------------------------------------------------------");
         }
     }
 }

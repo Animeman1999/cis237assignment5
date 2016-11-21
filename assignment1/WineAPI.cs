@@ -393,7 +393,47 @@ namespace assignment1
                 ui.OutputAString(e.ToString() + " " + e.StackTrace);
                 return false;
             }
-           
+        }
+
+        public void UpdateWine(string id)
+        {
+            BeverageJMartinEntities beverageEntities = new BeverageJMartinEntities();
+            UserInterface ui = new UserInterface();
+            Beverage beverageToUpdate = beverageEntities.Beverages.Find(id);
+            
+            string inputString = " ";
+            while (inputString != "5")
+            {
+                ui.PrintLine();
+                ui.ColorLineNoEnter(FormatBeverageSting(beverageToUpdate));
+                ui.PrintLine();
+                ui.ColorLineNoEnter(ui.PrintEditMenu(id));
+                inputString = ui.InputCharReturnString();
+                while (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4" && inputString != "5")
+                {
+                    ui.ColorLineNoEnter(ui.WriteInvalidEntry());
+                    ui.ColorLineNoEnter(FormatBeverageSting(beverageToUpdate));
+                    ui.ColorLineNoEnter(ui.PrintEditMenu(id));
+                    inputString = ui.InputCharReturnString();
+                }
+                Console.WriteLine();
+                switch (inputString)
+                {
+                    case "1":
+                        beverageToUpdate.name = ui.GetTheNameOfTheWine();
+                        break;
+                    case "2":
+                        beverageToUpdate.pack = ui.GetTheWinePack();
+                        break;
+                    case "3":
+                        beverageToUpdate.price = ui.GetThePrice();
+                        break;
+                    case "4":
+                        beverageToUpdate.active = ui.GetIfWineIsActive();
+                        break;
+                }
+            }
+            beverageEntities.SaveChanges();
         }
     }
 }

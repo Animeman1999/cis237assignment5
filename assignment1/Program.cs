@@ -34,7 +34,7 @@ namespace assignment1
             int choice = ui.GetUserInputMainMenu();
 
             //As long as the user does not choose 5 for exiting loop through the main menu
-            while (choice != 5)
+            while (choice != 6)
             {
                 switch (choice)
                 {
@@ -50,6 +50,9 @@ namespace assignment1
                     case 4://Go to the method SearchForWineAndPossiblyDelete and choose search and delete
                         SearchForWineAndPossiblyDelete(wineItemCollection, true);
                     break;
+                    case 5:
+                        ui.GetUserInputToUpdateAWine(wineItemCollection);
+                        break;
                 }
                 choice = ui.GetUserInputMainMenu();
             }
