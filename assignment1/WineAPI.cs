@@ -323,7 +323,7 @@ namespace assignment1
                         else
                         {
                             //As the user does not want to delete the items exit out and return a blank list.
-                            listString = "";
+                            listString = "Not deleted";
                         }
                     }
                 listString += "*************************************************************************************************" + Environment.NewLine;

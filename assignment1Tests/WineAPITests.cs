@@ -202,7 +202,50 @@ namespace assignment1.Tests
         [Test()]
         public void SearchByAndPossiblyDeleteTest()
         {
-            Assert.Fail();
+            bool delete1 = true;
+            BeverageJMartinEntities BevEntitites = new BeverageJMartinEntities();
+            WineAPI testWineAPI = new WineAPI();
+            Beverage addBev = new Beverage();
+            
+            bool active = true;
+            string id = "TTTTTT";
+            string id2 = "TTTTTA";
+            string id3 = "TTTTTB";
+            string id4 = "TTTTTC";
+            string id5 = "TTTTTD";
+            string name = "white winie";
+            string pack = "54 ml";
+            Decimal price = 12.12M;
+            StringBuilder actualOutput = replaceConsole();
+            string inputString = StringRead("y{0}");
+
+            testWineAPI.AddNewItem(id, name, pack, price, active);
+            string idTest = testWineAPI.SearchByAndPossiblyDelete(id, nameof(Beverage.id), delete1);
+           
+            inputString = StringRead("y{0}");
+            testWineAPI.AddNewItem(id2, name, pack, price, active);
+            string nameTest = testWineAPI.SearchByAndPossiblyDelete(name, nameof(Beverage.name), delete1);
+            
+            inputString = StringRead("y{0}");
+            testWineAPI.AddNewItem(id3, name, pack, price, active);
+            string packTest = testWineAPI.SearchByAndPossiblyDelete(pack, nameof(Beverage.pack), delete1);
+            
+            inputString = StringRead("y{0}");
+            testWineAPI.AddNewItem(id4, name, pack, price, active);
+            string priceTest = testWineAPI.SearchByAndPossiblyDelete(price.ToString(), nameof(Beverage.price), delete1);
+            
+            inputString = StringRead("n{0}6{0}");
+            testWineAPI.AddNewItem(id5, name, pack, price, active);
+            string activeTest = testWineAPI.SearchByAndPossiblyDelete(active.ToString(), nameof(Beverage.active), delete1);
+            addBev = BevEntitites.Beverages.Find(id5);
+            BevEntitites.Beverages.Remove(addBev);
+            BevEntitites.SaveChanges();
+
+            StringAssert.Contains(id, idTest);
+            StringAssert.Contains(name, nameTest);
+            StringAssert.Contains(pack, packTest);
+            StringAssert.Contains(price.ToString(), priceTest);
+            StringAssert.Contains("Not deleted", activeTest);
         }
 
         [Test()]
